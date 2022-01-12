@@ -1,0 +1,4 @@
+firebase sha-1 / sha1-256 fix:
+https://www.programmersought.com/article/82186867935/
+gradle (right-up) ->FireDate-> app -> Tasks -> android -> signingReport - click on it
+search sha1 / sha-256 in console.

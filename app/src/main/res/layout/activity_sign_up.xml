@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.Activity_SignUp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email:"
+        android:textSize="24sp"
+        />
+
+    <EditText
+        android:id="@+id/signup_TXTF_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="email"
+        android:textSize="24sp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Password:"
+        android:textSize="24sp"
+        />
+
+    <EditText
+        android:id="@+id/signup_TXTF_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="password"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:textSize="24sp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Verify password:"
+        android:textSize="24sp"
+        />
+
+    <EditText
+        android:id="@+id/signup_TXTF_verifypassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="password again"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:textSize="24sp"
+        />
+
+    <Button
+        android:id="@+id/signup_BTN_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        />
+
+</LinearLayout>
