@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android_final_project.firedate">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,6 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FireDate">
+        <activity
+            android:name=".activities.Activity_Login"
+            android:exported="false" />
         <activity
             android:name=".activities.Activity_SignUp"
             android:exported="false" />
@@ -23,7 +31,7 @@
         </activity>
         <activity
             android:name=".activities.Activity_Swipe"
-            android:exported="false"></activity>
+            android:exported="false" />
     </application>
 
 </manifest>

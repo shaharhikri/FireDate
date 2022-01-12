@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android_final_project.firedate.R;
+import com.android_final_project.firedate.data.UserOperator;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -21,7 +22,6 @@ public class Activity_Swipe extends AppCompatActivity {
     private int i;
 
     private SwipeFlingAdapterView flingContainer;
-//    @BindView(R.id.frame) SwipeFlingAdapterView flingContainer;
     private Button swipe_BTN_left;
     private Button swipe_BTN_right;
     private TextView swipe_TXT_print;
@@ -30,11 +30,9 @@ public class Activity_Swipe extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
-//        ButterKnife.bind(this);
-
         findViews();
         initViews();
-
+        UserOperator.getUserPreferenceGroups();
     }
 
     private void findViews(){

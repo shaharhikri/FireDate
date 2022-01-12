@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">FireDate</string>
     <string name="signup_passworddidntmatch">password did not match</string>
-    <string name="signup_emailalreadytaken">Email is already taken.</string>
-    <string name="signup_succeeded.">Sign Up succeeded.</string>
+    <string name="signup_succeeded">Sign Up succeeded</string>
+    <string name="login_succeeded">Login succeeded</string>
+    <string name="logout">You Logged out</string>
+    <string name="empty_email">Email is empty</string>
+    <string name="empty_pass">"password is empty"</string>
+    <string name="signup_empty_name">"name is empty"</string>
+
 </resources>

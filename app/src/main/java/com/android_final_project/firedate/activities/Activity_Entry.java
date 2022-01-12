@@ -29,7 +29,7 @@ public class Activity_Entry extends AppCompatActivity {
 
     private void initViews(){
         entry_BTN_login.setOnClickListener( v -> {
-            Intent intent = new Intent(this, Activity_Swipe.class);
+            Intent intent = new Intent(this, Activity_Login.class);
             startActivity(intent);
             finish();
         });
