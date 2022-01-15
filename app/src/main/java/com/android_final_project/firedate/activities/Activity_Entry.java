@@ -2,6 +2,7 @@ package com.android_final_project.firedate.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.android_final_project.firedate.R;
+import com.android_final_project.firedate.data.UserOperator;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,15 +13,18 @@ public class Activity_Entry extends AppCompatActivity {
     Button entry_BTN_login;
     Button entry_BTN_signup;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
 
+
         findViews();
         initViews();
 
     }
+
 
     private void findViews(){
         entry_BTN_login = findViewById(R.id.entry_BTN_login);
@@ -39,7 +43,5 @@ public class Activity_Entry extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
-        //push test
     }
 }

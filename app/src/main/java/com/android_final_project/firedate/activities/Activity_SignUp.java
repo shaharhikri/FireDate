@@ -66,7 +66,8 @@ public class Activity_SignUp extends AppCompatActivity {
 
             @Override
             public void alreadyLoggedin() {
-                this.operationSucceeded();
+//                this.operationSucceeded();
+//                finish();
             }
 
             @Override
@@ -97,6 +98,13 @@ public class Activity_SignUp extends AppCompatActivity {
             }
             userOperator.signup(email, pass1, pass2, name, description, group);
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(Activity_SignUp.this,Activity_Entry.class);
+        startActivity(intent);
+        finish();
     }
 
 }

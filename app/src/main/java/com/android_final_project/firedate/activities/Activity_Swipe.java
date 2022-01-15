@@ -1,10 +1,12 @@
 package com.android_final_project.firedate.activities;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,27 +26,55 @@ public class Activity_Swipe extends AppCompatActivity {
     private SwipeFlingAdapterView flingContainer;
     private Button swipe_BTN_left;
     private Button swipe_BTN_right;
+    private Button swipe_BTN_logout;
     private TextView swipe_TXT_print;
+
+    private UserOperator userOperator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
+        initUserOperator();
         findViews();
         initViews();
         UserOperator.getUserPreferenceGroups();
+    }
+
+    //Has to happen before initViews() call
+    private void initUserOperator(){
+        userOperator = new UserOperator(Activity_Swipe.this, new UserOperator.UserOperatorCallback(){
+            @Override
+            public void operationFailed(String msg) { }
+
+            @Override
+            public void operationSucceeded() { }
+
+            @Override
+            public void alreadyLoggedin() { }
+
+            @Override
+            public void afterLogout() {
+                Toast.makeText(Activity_Swipe.this,getString(R.string.logout),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Activity_Swipe.this,Activity_Entry.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     private void findViews(){
         flingContainer = findViewById(R.id.swipe_FRM_cards);
         swipe_BTN_left = findViewById(R.id.swipe_BTN_left);
         swipe_BTN_right = findViewById(R.id.swipe_BTN_right);
+        swipe_BTN_logout = findViewById(R.id.swipe_BTN_logout);
         swipe_TXT_print = findViewById(R.id.swipe_TXT_print);
     }
 
     private void initViews(){
         swipe_BTN_left.setOnClickListener(v -> { flingContainer.getTopCardListener().selectLeft(); });
         swipe_BTN_right.setOnClickListener(v -> { flingContainer.getTopCardListener().selectRight(); });
+        swipe_BTN_logout.setOnClickListener(v -> { userOperator.logout(); finish();});
         initCardList();
         arrayAdapter = new ArrayAdapter<>(this, R.layout.card, R.id.card_text, cardList);
 
@@ -113,6 +143,11 @@ public class Activity_Swipe extends AppCompatActivity {
         cardList.add("c++");
         cardList.add("css");
         cardList.add("javascript");
+    }
+
+    @Override
+    public void onBackPressed(){
+        finish();
     }
 
 }

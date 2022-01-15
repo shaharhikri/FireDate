@@ -42,13 +42,15 @@ public class UserOperator {
             final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             if(user != null){
                 callback.alreadyLoggedin();
+            }else{
+                callback.afterLogout();
             }
         });
     }
 
     public void logout(){
         auth.signOut();
-        callback.afterLogout();
+//        callback.afterLogout();
     }
 
     public void login(String email, String pass){
@@ -145,7 +147,6 @@ public class UserOperator {
             }
         });
 
-
         return null;
     }
 
@@ -184,6 +185,10 @@ public class UserOperator {
             }
             return groups;
         }
+    }
+
+    public void clean(){
+
     }
 
     public static class GendersStringException extends Exception{ }

@@ -48,7 +48,8 @@ public class Activity_Login extends AppCompatActivity {
 
             @Override
             public void alreadyLoggedin() {
-                this.operationSucceeded();
+//                this.operationSucceeded();
+//                finish();
             }
 
             @Override
@@ -69,6 +70,13 @@ public class Activity_Login extends AppCompatActivity {
 
             userOperator.login(email, pass);
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(Activity_Login.this,Activity_Entry.class);
+        startActivity(intent);
+        finish();
     }
 
 }
