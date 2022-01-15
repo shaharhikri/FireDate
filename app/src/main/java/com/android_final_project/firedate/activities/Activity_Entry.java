@@ -42,4 +42,10 @@ public class Activity_Entry extends AppCompatActivity {
             finish();
         });
     }
+
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        System.exit(0);
+    }
 }

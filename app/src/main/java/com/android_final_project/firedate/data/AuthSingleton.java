@@ -1,6 +1,7 @@
 package com.android_final_project.firedate.data;
 
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
