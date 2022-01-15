@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.UserOperator;
 import com.android_final_project.firedate.R;
 
@@ -32,28 +33,30 @@ public class Activity_Login extends AppCompatActivity {
 
     //Has to happen before initViews() call
     private void initUserOperator(){
-        userOperator = new UserOperator(Activity_Login.this, new UserOperator.UserOperatorCallback(){
+        userOperator = new UserOperator(this, new UserOperator.UserOperatorCallback() {
             @Override
             public void operationFailed(String msg) {
                 Toast.makeText(Activity_Login.this,msg,Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void operationSucceeded() {
-                Toast.makeText(Activity_Login.this,getString(R.string.login_succeeded),Toast.LENGTH_SHORT).show();
+            public void operationSucceeded() { }
+        });
+
+        AuthSingleton.setAuthCallback(new AuthSingleton.AuthCallback() {
+            @Override
+            public void LoggedIn() {
                 Intent intent = new Intent(Activity_Login.this,Activity_Swipe.class);
                 startActivity(intent);
                 finish();
             }
 
             @Override
-            public void alreadyLoggedin() {
-//                this.operationSucceeded();
-//                finish();
+            public void LoggedOut() {
+                Intent intent = new Intent(Activity_Login.this,Activity_Entry.class);
+                startActivity(intent);
+                finish();
             }
-
-            @Override
-            public void afterLogout() { }
         });
     }
 

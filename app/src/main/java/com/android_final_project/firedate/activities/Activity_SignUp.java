@@ -2,6 +2,7 @@ package com.android_final_project.firedate.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.UserOperator;
 import com.android_final_project.firedate.R;
 
@@ -57,21 +58,23 @@ public class Activity_SignUp extends AppCompatActivity {
             }
 
             @Override
-            public void operationSucceeded() {
-                Toast.makeText(Activity_SignUp.this,getString(R.string.signup_succeeded),Toast.LENGTH_SHORT).show();
+            public void operationSucceeded() { }
+        });
+
+        AuthSingleton.setAuthCallback(new AuthSingleton.AuthCallback() {
+            @Override
+            public void LoggedIn() {
                 Intent intent = new Intent(Activity_SignUp.this,Activity_Swipe.class);
                 startActivity(intent);
                 finish();
             }
 
             @Override
-            public void alreadyLoggedin() {
-//                this.operationSucceeded();
-//                finish();
+            public void LoggedOut() {
+                Intent intent = new Intent(Activity_SignUp.this,Activity_Entry.class);
+                startActivity(intent);
+                finish();
             }
-
-            @Override
-            public void afterLogout() { }
         });
     }
 

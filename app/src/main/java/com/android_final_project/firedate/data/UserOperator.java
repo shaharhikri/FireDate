@@ -14,8 +14,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class UserOperator {
 
@@ -24,47 +22,33 @@ public class UserOperator {
 //    final public static Map<SexualGroup, ArrayList<SexualGroup>> groupMap = new HashMap<SexualGroup, ArrayList<SexualGroup>>()
 //            .put(SexualGroup.Male_Male,new ArrayList<SexualGroup>(SexualGroup.Male_Male,))
 
-
-    private FirebaseAuth auth;
     AppCompatActivity activity;
-    private UserOperatorCallback callback;
+    UserOperatorCallback userOpCallback;
 
     public UserOperator(AppCompatActivity activity, UserOperatorCallback callback){
-        this.callback = callback;
         this.activity = activity;
-        initFirebaseAuth();
-    }
-
-    private void initFirebaseAuth(){
-        auth = FirebaseAuth.getInstance();
-
-        auth.addAuthStateListener(firebaseAuth -> {
-            final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            if(user != null){
-                callback.alreadyLoggedin();
-            }else{
-                callback.afterLogout();
-            }
-        });
+        userOpCallback = callback;
     }
 
     public void logout(){
-        auth.signOut();
-//        callback.afterLogout();
+        AuthSingleton.getMe().signOut();
     }
 
     public void login(String email, String pass){
         if(email==null || email.isEmpty()){
-            callback.operationFailed(activity.getString(R.string.empty_email));
+            userOpCallback.operationFailed(activity.getString(R.string.empty_email));
         }
         else if(pass==null || pass.isEmpty()) {
-            callback.operationFailed(activity.getString(R.string.empty_pass));
+            userOpCallback.operationFailed(activity.getString(R.string.empty_pass));
         }
         else{
-            auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(activity,
+            AuthSingleton.getMe().signInWithEmailAndPassword(email, pass).addOnCompleteListener(activity,
                     task -> {
                         if (!task.isSuccessful()) { // if email is taken, or password is too short
-                            task.addOnFailureListener(exception -> callback.operationFailed(exception.getMessage()));
+                            task.addOnFailureListener(exception -> userOpCallback.operationFailed(exception.getMessage()));
+                        }
+                        else{
+                            userOpCallback.operationSucceeded();
                         }
                     });
         }
@@ -72,27 +56,27 @@ public class UserOperator {
 
     public void signup(String email, String pass1, String pass2, String name, String description, SexualGroup group){
         if(email==null || email.isEmpty()){
-            callback.operationFailed(activity.getString(R.string.empty_email));
+            userOpCallback.operationFailed(activity.getString(R.string.empty_email));
         }
         else if(pass1==null || pass2==null || pass1.isEmpty() || pass2.isEmpty()) {
-            callback.operationFailed(activity.getString(R.string.empty_pass));
+            userOpCallback.operationFailed(activity.getString(R.string.empty_pass));
         }
         else if(name==null || name.isEmpty()) {
-            callback.operationFailed(activity.getString(R.string.signup_empty_name));
+            userOpCallback.operationFailed(activity.getString(R.string.signup_empty_name));
         }
         else if(pass1.compareTo(pass2)!=0){
-            callback.operationFailed(activity.getString(R.string.signup_passworddidntmatch));
+            userOpCallback.operationFailed(activity.getString(R.string.signup_passworddidntmatch));
         }
         else{
-            auth.createUserWithEmailAndPassword(email, pass1).addOnCompleteListener(activity,
+            AuthSingleton.getMe().createUserWithEmailAndPassword(email, pass1).addOnCompleteListener(activity,
                     task -> { //sign up failed
                         if (!task.isSuccessful()) { // if email is taken, or password is too short
-                            task.addOnFailureListener(exception -> callback.operationFailed(exception.getMessage()));
+                            task.addOnFailureListener(exception -> userOpCallback.operationFailed(exception.getMessage()));
                         }
                         else{ //sign up succeeded
-                            String userId = auth.getCurrentUser().getUid();
+                            String userId = AuthSingleton.getMe().getCurrentUser().getUid();
                             addUserToDB(userId, name, (description==null? "": description), group);
-                            callback.operationSucceeded();
+                            userOpCallback.operationSucceeded();
                         }
                     });
         }
@@ -128,9 +112,6 @@ public class UserOperator {
 
     public static ArrayList<SexualGroup> getUserPreferenceGroups(){
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-//        String group = db.child("UsersGroup").child(userId).get().getResult().getKey();
-//        Log.d("pttt", "getUserPreferenceGroups: "+group);
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("UsersGroup");
@@ -150,12 +131,12 @@ public class UserOperator {
         return null;
     }
 
-    public enum SexualGroup{
+    public enum SexualGroup {
         Male_Female, Male_Male, Male_Bisexual, Female_Male, Female_Female, Female_Bisexual;
 
-        public ArrayList<SexualGroup> getPreferenceGroups(){
+        public ArrayList<SexualGroup> getPreferenceGroups() {
             ArrayList<SexualGroup> groups = new ArrayList<SexualGroup>();
-            switch (this){
+            switch (this) {
                 case Male_Female:
                     groups.add(Female_Male);
                     break;
@@ -187,17 +168,11 @@ public class UserOperator {
         }
     }
 
-    public void clean(){
-
-    }
-
     public static class GendersStringException extends Exception{ }
 
-    public interface UserOperatorCallback{
-        public void operationFailed(String msg);
-        public void operationSucceeded();
-        public void alreadyLoggedin();
-        public void afterLogout();
+    public static interface UserOperatorCallback{
+        void operationFailed(String msg);
+        void operationSucceeded();
     }
 
 }

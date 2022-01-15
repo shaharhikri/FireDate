@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android_final_project.firedate.R;
+import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.UserOperator;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
@@ -50,12 +51,18 @@ public class Activity_Swipe extends AppCompatActivity {
             @Override
             public void operationSucceeded() { }
 
+        });
+
+        AuthSingleton.setAuthCallback(new AuthSingleton.AuthCallback() {
             @Override
-            public void alreadyLoggedin() { }
+            public void LoggedIn() {
+                Intent intent = new Intent(Activity_Swipe.this,Activity_Swipe.class);
+                startActivity(intent);
+                finish();
+            }
 
             @Override
-            public void afterLogout() {
-                Toast.makeText(Activity_Swipe.this,getString(R.string.logout),Toast.LENGTH_SHORT).show();
+            public void LoggedOut() {
                 Intent intent = new Intent(Activity_Swipe.this,Activity_Entry.class);
                 startActivity(intent);
                 finish();
