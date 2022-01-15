@@ -44,6 +44,10 @@ public class Activity_Swipe extends AppCompatActivity {
 //            userPreferenceGroups = sexualPreferenceGroups;
 //            Log.d("pttt", "onCreate: " + userPreferenceGroups.toString());
 //        });
+
+        UserOperator.getUserPreferenceGroups(sexualPreferenceGroups -> {
+            initFlingContainer(sexualPreferenceGroups);
+        });
     }
 
     //Has to happen before initViews() call
@@ -72,7 +76,15 @@ public class Activity_Swipe extends AppCompatActivity {
         swipe_BTN_left.setOnClickListener(v -> { flingContainer.getTopCardListener().selectLeft(); });
         swipe_BTN_right.setOnClickListener(v -> { flingContainer.getTopCardListener().selectRight(); });
         swipe_BTN_logout.setOnClickListener(v -> { userOperator.logout(); finish();});
+
+    }
+
+    private void initFlingContainer(ArrayList<UserOperator.SexualGroup> userPreferenceGroups){
+
+        //TODO: Do somethig with the list
+
         initCardList();
+
         arrayAdapter = new ArrayAdapter<>(this, R.layout.card, R.id.card_text, cardList);
 
         flingContainer.setAdapter(arrayAdapter);
