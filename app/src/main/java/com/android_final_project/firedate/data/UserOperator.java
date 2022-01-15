@@ -110,16 +110,19 @@ public class UserOperator {
         return group;
     }
 
-    public static ArrayList<SexualGroup> getUserPreferenceGroups(){
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    public interface PreferenceGroupsCallback{
+        void userPreferenceGroups(ArrayList<SexualGroup> sexualPreferenceGroups);
+    }
+    public static void getUserPreferenceGroups(PreferenceGroupsCallback preferenceGroupsCallback){
+        String userId = AuthSingleton.getMe().getCurrentUser().getUid();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("UsersGroup");
         myRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String group = snapshot.getValue().toString();
-                Log.d("pttt", "onDataChange: " + group);
+                SexualGroup userSexualGroup = SexualGroup.valueOf(snapshot.getValue().toString());
+                preferenceGroupsCallback.userPreferenceGroups(userSexualGroup.getPreferenceGroups());
             }
 
             @Override
@@ -127,8 +130,6 @@ public class UserOperator {
 
             }
         });
-
-        return null;
     }
 
     public enum SexualGroup {

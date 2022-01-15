@@ -1,12 +1,10 @@
 package com.android_final_project.firedate.activities;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,14 +30,20 @@ public class Activity_Swipe extends AppCompatActivity {
 
     private UserOperator userOperator;
 
+//    private ArrayList<UserOperator.SexualGroup> userPreferenceGroups;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
         initUserOperator();
+
         findViews();
         initViews();
-        UserOperator.getUserPreferenceGroups();
+//        UserOperator.getUserPreferenceGroups(sexualPreferenceGroups -> {
+//            userPreferenceGroups = sexualPreferenceGroups;
+//            Log.d("pttt", "onCreate: " + userPreferenceGroups.toString());
+//        });
     }
 
     //Has to happen before initViews() call
