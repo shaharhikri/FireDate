@@ -39,5 +39,7 @@ public class Activity_Entry extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+
+        //push test
     }
 }
