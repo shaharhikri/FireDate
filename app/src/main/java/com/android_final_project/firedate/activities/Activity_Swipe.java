@@ -10,15 +10,25 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.AuthSingleton;
+import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Activity_Swipe extends AppCompatActivity {
 
     private ArrayList<String> cardList;
+    private ArrayList<String> cardsId;
     private ArrayAdapter<String> arrayAdapter;
     private int i;
 
@@ -30,6 +40,10 @@ public class Activity_Swipe extends AppCompatActivity {
 
     private UserOperator userOperator;
 
+    private DatabaseReference usersDb;
+    private int cardsPerPage = 20;
+    private boolean isLoading = false;
+
 //    private ArrayList<UserOperator.SexualGroup> userPreferenceGroups;
 
     @Override
@@ -37,6 +51,7 @@ public class Activity_Swipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
         initUserOperator();
+        usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
 
         findViews();
         initViews();
@@ -83,7 +98,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
         //TODO: Do somethig with the list
 
-        initCardList();
+        initCardList(userPreferenceGroups);
 
         arrayAdapter = new ArrayAdapter<>(this, R.layout.card, R.id.card_text, cardList);
 
@@ -117,10 +132,11 @@ public class Activity_Swipe extends AppCompatActivity {
                     @Override
                     public void onAdapterAboutToEmpty(int itemsInAdapter) {
                         // Ask for more data here
-                        cardList.add("XML "+i);
-                        arrayAdapter.notifyDataSetChanged();
-                        Log.d("LIST", "notified");
-                        i++;
+                        getUsers(userPreferenceGroups, cardList.get(itemsInAdapter-1));
+//                        cardList.add("XML "+i);
+//                        arrayAdapter.notifyDataSetChanged();
+//                        Log.d("LIST", "notified");
+//                        i++;
                     }
 
                     @Override
@@ -142,17 +158,106 @@ public class Activity_Swipe extends AppCompatActivity {
         });
     }
 
-    private void initCardList(){
+    private void initCardList(ArrayList<UserOperator.SexualGroup> userPreferenceGroups){
         cardList = new ArrayList<>();
-        cardList.add("php");
-        cardList.add("c");
-        cardList.add("python");
-        cardList.add("java");
-        cardList.add("html");
-        cardList.add("c++");
-        cardList.add("css");
-        cardList.add("javascript");
+        cardsId = new ArrayList<>();
+        getUsers(userPreferenceGroups, null);
+//        getOppositeSexUsers(userPreferenceGroups);
+//        cardList.add("php");
+//        cardList.add("c");
+//        cardList.add("python");
+//        cardList.add("java");
+//        cardList.add("html");
+//        cardList.add("c++");
+//        cardList.add("css");
+//        cardList.add("javascript");
     }
+
+//    public void getOppositeSexUsers(ArrayList<UserOperator.SexualGroup> userPreferenceGroups){
+////        Query jokesQuery = jokesRef.orderByKey().endAt(oldestKeyYouveSeen).limitToLast(20);
+//        for (UserOperator.SexualGroup sg: userPreferenceGroups) {
+//            usersDb.child(sg.toString()).addChildEventListener(new ChildEventListener() {
+//                @Override
+//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                    if (dataSnapshot.child("sex").getValue() != null) {
+//                        if (dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currentUId) && !dataSnapshot.child("connections").child("yeps").hasChild(currentUId) && dataSnapshot.child("sex").getValue().toString().equals(oppositeUserSex)) {
+//                            String profileImageUrl = "default";
+//                            if (!dataSnapshot.child("profileImageUrl").getValue().equals("default")) {
+//                                profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
+//                            }
+//                            arrayAdapter.notifyDataSetChanged();
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//                }
+//
+//                @Override
+//                public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                }
+//
+//                @Override
+//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//                }
+//            });
+//        }
+//    }
+
+    public void getOppositeSexUsers(ArrayList<UserOperator.SexualGroup> userPreferenceGroups) {
+//        Query jokesQuery = jokesRef.orderByKey().endAt(oldestKeyYouveSeen).limitToLast(20);
+        for (UserOperator.SexualGroup sg : userPreferenceGroups) {
+            Query usersDbQuery = usersDb.child(sg.toString()).orderByKey().endAt("oldestKeyYouveSeen").limitToLast(20);
+        }
+    }
+
+    private void getUsers(ArrayList<UserOperator.SexualGroup> userPreferenceGroups, String nodeId) {
+        Query query;
+        // TODO: what happen if someone join in start of list;
+        for (UserOperator.SexualGroup sg : userPreferenceGroups) {
+            if (nodeId == null)
+                query = usersDb
+                        .child(sg.toString())
+                        .orderByKey()
+                        .limitToFirst(cardsPerPage);
+            else
+                query = usersDb
+                        .child(sg.toString())
+                        .orderByKey()
+                        .startAt(nodeId)
+                        .limitToFirst(cardsPerPage);
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    UserEntity user;
+                    List<UserEntity> userEntity = new ArrayList<>();
+                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                        userEntity.add(userSnapshot.getValue(UserEntity.class));
+                    }
+
+                    // TODO change to user card
+                    for (UserEntity entity: userEntity) {
+                        cardList.add(entity.getName());
+                    }
+                    arrayAdapter.notifyDataSetChanged();
+                    isLoading = false;
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    isLoading = false;
+                }
+            });
+        }
+    }
+
+
 
     @Override
     public void onBackPressed() {

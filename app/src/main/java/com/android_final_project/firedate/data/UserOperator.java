@@ -140,6 +140,7 @@ public class UserOperator {
             switch (this) {
                 case Male_Female:
                     groups.add(Female_Male);
+                    groups.add(Female_Bisexual);
                     break;
                 case Male_Male:
                     groups.add(Male_Male);
@@ -153,6 +154,7 @@ public class UserOperator {
                     break;
                 case Female_Male:
                     groups.add(Male_Female);
+                    groups.add(Male_Bisexual);
                     break;
                 case Female_Female:
                     groups.add(Female_Female);
