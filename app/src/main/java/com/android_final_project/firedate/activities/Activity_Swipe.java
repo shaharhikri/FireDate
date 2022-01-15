@@ -53,21 +53,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
         });
 
-        AuthSingleton.setAuthCallback(new AuthSingleton.AuthCallback() {
-            @Override
-            public void LoggedIn() {
-                Intent intent = new Intent(Activity_Swipe.this,Activity_Swipe.class);
-                startActivity(intent);
-                finish();
-            }
-
-            @Override
-            public void LoggedOut() {
-                Intent intent = new Intent(Activity_Swipe.this,Activity_Entry.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        AuthSingleton.setAuthCallback(new AuthSingleton.DefaultAuthCallback(this));
     }
 
     private void findViews(){

@@ -19,10 +19,8 @@ public class Activity_Entry extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
 
-
         findViews();
         initViews();
-
     }
 
 
