@@ -88,7 +88,7 @@ public class UserOperator {
         db.child("Users")
                 .child(group.toString())
                 .child(userId)
-                .setValue(new UserEntity(name, description));
+                .setValue(new UserEntity(userId, name, description));
 
         db.child("UsersGroup")
                 .child(userId)

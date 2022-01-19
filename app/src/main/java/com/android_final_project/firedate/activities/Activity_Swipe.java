@@ -4,15 +4,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.AuthSingleton;
+import com.android_final_project.firedate.data.UserArrayAdpter;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,9 +28,11 @@ import java.util.List;
 
 public class Activity_Swipe extends AppCompatActivity {
 
-    private ArrayList<String> cardList;
-    private ArrayList<String> cardsId;
-    private ArrayAdapter<String> arrayAdapter;
+//    private ArrayList<String> cardList;
+    private ArrayList<UserEntity> cardList;
+    private ArrayList<String> cardsId = new ArrayList<>();
+//    private ArrayAdapter<String> arrayAdapter;
+    private UserArrayAdpter arrayAdapter;
     private int i;
 
     private SwipeFlingAdapterView flingContainer;
@@ -39,26 +42,26 @@ public class Activity_Swipe extends AppCompatActivity {
     private TextView swipe_TXT_print;
 
     private UserOperator userOperator;
-
+    private String userId;
     private DatabaseReference usersDb;
     private int cardsPerPage = 20;
     private boolean isLoading = false;
 
 //    private ArrayList<UserOperator.SexualGroup> userPreferenceGroups;
 
+    private ListView listView;
+    private List<UserEntity> rowItems;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
         initUserOperator();
+        userId = AuthSingleton.getMe().getCurrentUser().getUid();
         usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
 
         findViews();
         initViews();
-//        UserOperator.getUserPreferenceGroups(sexualPreferenceGroups -> {
-//            userPreferenceGroups = sexualPreferenceGroups;
-//            Log.d("pttt", "onCreate: " + userPreferenceGroups.toString());
-//        });
 
         UserOperator.getUserPreferenceGroups(sexualPreferenceGroups -> {
             initFlingContainer(sexualPreferenceGroups);
@@ -100,7 +103,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
         initCardList(userPreferenceGroups);
 
-        arrayAdapter = new ArrayAdapter<>(this, R.layout.card, R.id.card_text, cardList);
+        arrayAdapter = new UserArrayAdpter(this, R.layout.card, cardList);
 
         flingContainer.setAdapter(arrayAdapter);
         flingContainer.setFlingListener(
@@ -116,23 +119,24 @@ public class Activity_Swipe extends AppCompatActivity {
                     @Override
                     public void onLeftCardExit(Object dataObject) {
                         //Do something on the left!
-                        //You also have access to the original object.
-                        //If you want to use it just cast it (String) dataObject
+                        UserEntity obj = (UserEntity) dataObject;
+                        usersDb.child("").child(obj.getUserId()).child("swipes").child("lefts").child(userId).setValue(true);
 
-//                        Toast.makeText(MainActivity.this, dataObject+" Left!", Toast.LENGTH_SHORT).show();
-                        swipe_TXT_print.setText(dataObject+" Left!");
+                        swipe_TXT_print.setText(obj.getName() + " Left!");
                     }
 
                     @Override
                     public void onRightCardExit(Object dataObject) {
-//                        Toast.makeText(MainActivity.this, dataObject+" Right!", Toast.LENGTH_SHORT).show();
-                        swipe_TXT_print.setText(dataObject+" Right!");
+                        UserEntity obj = (UserEntity) dataObject;
+                        usersDb.child("").child(obj.getUserId()).child("swipes").child("rights").child(userId).setValue(true);
+
+                        swipe_TXT_print.setText(obj.getName() + " Right!");
                     }
 
                     @Override
                     public void onAdapterAboutToEmpty(int itemsInAdapter) {
                         // Ask for more data here
-                        getUsers(userPreferenceGroups, cardList.get(itemsInAdapter-1));
+                        getUsers(userPreferenceGroups, cardsId);
 //                        cardList.add("XML "+i);
 //                        arrayAdapter.notifyDataSetChanged();
 //                        Log.d("LIST", "notified");
@@ -142,8 +146,8 @@ public class Activity_Swipe extends AppCompatActivity {
                     @Override
                     public void onScroll(float scrollProgressPercent) {
                         View selectedCard = flingContainer.getSelectedView();
-                        selectedCard.findViewById(R.id.card_swiperight_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
-                        selectedCard.findViewById(R.id.card_swipeleft_indicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+                        selectedCard.findViewById(R.id.card_VIEW_rightIndicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+                        selectedCard.findViewById(R.id.card_VIEW_leftIndicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
                     }
                 }
         );
@@ -161,65 +165,22 @@ public class Activity_Swipe extends AppCompatActivity {
     private void initCardList(ArrayList<UserOperator.SexualGroup> userPreferenceGroups){
         cardList = new ArrayList<>();
         cardsId = new ArrayList<>();
-        getUsers(userPreferenceGroups, null);
-//        getOppositeSexUsers(userPreferenceGroups);
-//        cardList.add("php");
-//        cardList.add("c");
-//        cardList.add("python");
-//        cardList.add("java");
-//        cardList.add("html");
-//        cardList.add("c++");
-//        cardList.add("css");
-//        cardList.add("javascript");
+        getUsers(userPreferenceGroups, cardsId);
     }
 
-//    public void getOppositeSexUsers(ArrayList<UserOperator.SexualGroup> userPreferenceGroups){
-////        Query jokesQuery = jokesRef.orderByKey().endAt(oldestKeyYouveSeen).limitToLast(20);
-//        for (UserOperator.SexualGroup sg: userPreferenceGroups) {
-//            usersDb.child(sg.toString()).addChildEventListener(new ChildEventListener() {
-//                @Override
-//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                    if (dataSnapshot.child("sex").getValue() != null) {
-//                        if (dataSnapshot.exists() && !dataSnapshot.child("connections").child("nope").hasChild(currentUId) && !dataSnapshot.child("connections").child("yeps").hasChild(currentUId) && dataSnapshot.child("sex").getValue().toString().equals(oppositeUserSex)) {
-//                            String profileImageUrl = "default";
-//                            if (!dataSnapshot.child("profileImageUrl").getValue().equals("default")) {
-//                                profileImageUrl = dataSnapshot.child("profileImageUrl").getValue().toString();
-//                            }
-//                            arrayAdapter.notifyDataSetChanged();
-//                        }
-//                    }
-//                }
-//
-//                @Override
-//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//                }
-//
-//                @Override
-//                public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                }
-//
-//                @Override
-//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//                }
-//            });
-//        }
-//    }
-
-    public void getOppositeSexUsers(ArrayList<UserOperator.SexualGroup> userPreferenceGroups) {
-//        Query jokesQuery = jokesRef.orderByKey().endAt(oldestKeyYouveSeen).limitToLast(20);
-        for (UserOperator.SexualGroup sg : userPreferenceGroups) {
-            Query usersDbQuery = usersDb.child(sg.toString()).orderByKey().endAt("oldestKeyYouveSeen").limitToLast(20);
-        }
-    }
-
-    private void getUsers(ArrayList<UserOperator.SexualGroup> userPreferenceGroups, String nodeId) {
+    private void getUsers(ArrayList<UserOperator.SexualGroup> userPreferenceGroups, ArrayList<String> nodesId) {
         Query query;
+        int listSize = userPreferenceGroups.size();
+
         // TODO: what happen if someone join in start of list;
-        for (UserOperator.SexualGroup sg : userPreferenceGroups) {
+        for (int i = 0; i < listSize; i++) {
+            UserOperator.SexualGroup sg = userPreferenceGroups.get(i);
+            String nodeId;
+            try {
+                nodeId = nodesId.get(i);
+            }catch (Exception e){
+                nodeId = null;
+            }
             if (nodeId == null)
                 query = usersDb
                         .child(sg.toString())
@@ -232,19 +193,29 @@ public class Activity_Swipe extends AppCompatActivity {
                         .startAt(nodeId)
                         .limitToFirst(cardsPerPage);
 
+            int finalI = i;
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    UserEntity user;
-                    List<UserEntity> userEntity = new ArrayList<>();
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        userEntity.add(userSnapshot.getValue(UserEntity.class));
+                        UserEntity otherUser = new UserEntity(
+                                userSnapshot.getKey(),
+                                userSnapshot.child("name").getValue().toString(),
+                                userSnapshot.child("description").getValue().toString());
+                        // TODO: check if show this person to User(duplicate)
+                        if(!otherUser.getUserId().equals(userId)
+                                && userSnapshot.child("swipes").child("lefts").hasChild(userId)
+                                && userSnapshot.child("swipes").child("rights").hasChild(userId)){
+                            cardList.add(otherUser);
+                        }
+
+                    }
+                    try {
+                        nodesId.set(finalI, dataSnapshot.getKey());
+                    }catch (Exception e){
+                        nodesId.add(dataSnapshot.getKey());
                     }
 
-                    // TODO change to user card
-                    for (UserEntity entity: userEntity) {
-                        cardList.add(entity.getName());
-                    }
                     arrayAdapter.notifyDataSetChanged();
                     isLoading = false;
                 }
