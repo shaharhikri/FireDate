@@ -111,10 +111,10 @@ public class UserOperator {
     }
 
     public interface PreferenceGroupsCallback{
-        void userPreferenceGroups(ArrayList<SexualGroup> sexualPreferenceGroups);
+        void userPreferenceGroups(SexualGroup sexualGroup);
     }
-    public static void getUserPreferenceGroups(PreferenceGroupsCallback preferenceGroupsCallback){
-        String userId = AuthSingleton.getMe().getCurrentUser().getUid();
+    public static void getUserGroup(String userId, PreferenceGroupsCallback preferenceGroupsCallback){
+//        String userId = AuthSingleton.getMe().getCurrentUser().getUid();
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("UsersGroup");
@@ -122,7 +122,7 @@ public class UserOperator {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 SexualGroup userSexualGroup = SexualGroup.valueOf(snapshot.getValue().toString());
-                preferenceGroupsCallback.userPreferenceGroups(userSexualGroup.getPreferenceGroups());
+                preferenceGroupsCallback.userPreferenceGroups(userSexualGroup);
             }
 
             @Override

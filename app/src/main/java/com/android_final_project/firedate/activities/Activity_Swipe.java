@@ -2,11 +2,12 @@ package com.android_final_project.firedate.activities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android_final_project.firedate.R;
@@ -42,7 +43,8 @@ public class Activity_Swipe extends AppCompatActivity {
     private TextView swipe_TXT_print;
 
     private UserOperator userOperator;
-    private String userId;
+    private String currentUserId;
+    private UserOperator.SexualGroup currentUserSexualGroup;
     private DatabaseReference usersDb;
     private int cardsPerPage = 20;
     private boolean isLoading = false;
@@ -57,14 +59,15 @@ public class Activity_Swipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
         initUserOperator();
-        userId = AuthSingleton.getMe().getCurrentUser().getUid();
+        currentUserId = AuthSingleton.getMe().getCurrentUser().getUid();
         usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
 
         findViews();
         initViews();
 
-        UserOperator.getUserPreferenceGroups(sexualPreferenceGroups -> {
-            initFlingContainer(sexualPreferenceGroups);
+        UserOperator.getUserGroup(currentUserId, sexualPreferenceGroups -> {
+            currentUserSexualGroup = sexualPreferenceGroups;
+            initFlingContainer(sexualPreferenceGroups.getPreferenceGroups());
         });
     }
 
@@ -120,16 +123,15 @@ public class Activity_Swipe extends AppCompatActivity {
                     public void onLeftCardExit(Object dataObject) {
                         //Do something on the left!
                         UserEntity obj = (UserEntity) dataObject;
-                        usersDb.child("").child(obj.getUserId()).child("swipes").child("lefts").child(userId).setValue(true);
-
+                        handleSwipe(obj, "left");
                         swipe_TXT_print.setText(obj.getName() + " Left!");
+
                     }
 
                     @Override
                     public void onRightCardExit(Object dataObject) {
                         UserEntity obj = (UserEntity) dataObject;
-                        usersDb.child("").child(obj.getUserId()).child("swipes").child("rights").child(userId).setValue(true);
-
+                        handleSwipe(obj, "right");
                         swipe_TXT_print.setText(obj.getName() + " Right!");
                     }
 
@@ -159,6 +161,50 @@ public class Activity_Swipe extends AppCompatActivity {
 //                Toast.makeText(MainActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
                 swipe_TXT_print.setText(dataObject+" Clicked!");
             }
+        });
+    }
+
+    private void handleSwipe(UserEntity otherUser, String direction) {
+        UserOperator.getUserGroup(otherUser.getUserId(), sexualPreferenceGroups -> {
+            usersDb.child(sexualPreferenceGroups.toString()).child(otherUser.getUserId()).child("swipes").child(direction).child(currentUserId).setValue(true);
+            if(direction.equals("right")){
+                checkMatch(otherUser, sexualPreferenceGroups);
+            }
+        });
+
+    }
+
+    private void checkMatch(UserEntity otherUser, UserOperator.SexualGroup sexualPreferenceGroups) {
+        DatabaseReference currentUserDbRef = usersDb
+                .child(currentUserSexualGroup.toString())
+                .child(currentUserId)
+                .child("swipes")
+                .child("right")
+                .child(otherUser.getUserId());
+        currentUserDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    Toast.makeText(Activity_Swipe.this, "Match!", Toast.LENGTH_SHORT).show();
+                    usersDb
+                            .child(sexualPreferenceGroups.toString())
+                            .child(otherUser.getUserId())
+                            .child("swipes")
+                            .child("matches")
+                            .child(currentUserId)
+                            .setValue(true);
+                    usersDb
+                            .child(currentUserSexualGroup.toString())
+                            .child(currentUserId)
+                            .child("swipes")
+                            .child("matches")
+                            .child(otherUser.getUserId())
+                            .setValue(true);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
         });
     }
 
@@ -203,9 +249,10 @@ public class Activity_Swipe extends AppCompatActivity {
                                 userSnapshot.child("name").getValue().toString(),
                                 userSnapshot.child("description").getValue().toString());
                         // TODO: check if show this person to User(duplicate)
-                        if(!otherUser.getUserId().equals(userId)
-                                && userSnapshot.child("swipes").child("lefts").hasChild(userId)
-                                && userSnapshot.child("swipes").child("rights").hasChild(userId)){
+                        if(!otherUser.getUserId().equals(currentUserId)
+                                && !userSnapshot.child("swipes").child("left").hasChild(currentUserId)
+                                && !userSnapshot.child("swipes").child("right").hasChild(currentUserId)
+                        ){
                             cardList.add(otherUser);
                         }
 
