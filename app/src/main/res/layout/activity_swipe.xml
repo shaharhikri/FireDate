@@ -7,11 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".activities.Activity_Swipe">
 
-    <Button
-        android:id="@+id/swipe_BTN_logout"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="logout"/>
+        android:orientation="horizontal">
+            <Button
+                android:id="@+id/swipe_BTN_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="logout"/>
+
+            <Button
+                android:id="@+id/swipe_BTN_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="settings" />
+    </LinearLayout>
+
 
     <com.lorentzos.flingswipe.SwipeFlingAdapterView
         android:id="@+id/swipe_FRM_cards"

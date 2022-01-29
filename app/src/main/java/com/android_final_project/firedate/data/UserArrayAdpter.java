@@ -36,10 +36,13 @@ public class UserArrayAdpter extends ArrayAdapter<UserEntity> {
 
         findViews(convertView);
 
-        String imgUrl = "https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png";
+        if (userEntity.getProfileImageUrl() == null){
+            userEntity.setProfileImageUrl("https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png");
+        }
+
         Glide
                 .with(context)
-                .load(imgUrl)
+                .load(userEntity.getProfileImageUrl())
                 .centerCrop()
                 .into(card_IMG_image);
         card_TXT_name .setText(userEntity.getName());

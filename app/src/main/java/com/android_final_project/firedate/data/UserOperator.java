@@ -5,8 +5,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android_final_project.firedate.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,6 +12,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class UserOperator {
 
@@ -75,24 +74,79 @@ public class UserOperator {
                         }
                         else{ //sign up succeeded
                             String userId = AuthSingleton.getMe().getCurrentUser().getUid();
-                            addUserToDB(userId, name, (description==null? "": description), group);
+                            // TODO add image
+                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null); //TODO add image
+                            addUserToDB(userEntity, group);
                             userOpCallback.operationSucceeded();
                         }
                     });
         }
     }
 
-    private void addUserToDB(String userId, String name, String description, SexualGroup group){
+    private void addUserToDB(UserEntity userEntity, SexualGroup group){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-
-        db.child("Users")
+        DatabaseReference user = db.child("Users")
                 .child(group.toString())
-                .child(userId)
-                .setValue(new UserEntity(userId, name, description));
+                .child(userEntity.getUserId());
+
+        user.child("name").setValue(userEntity.getName());
+        user.child("description").setValue(userEntity.getDescription());
+        user.child("profileImgUrl").setValue(userEntity.getProfileImageUrl());
+
 
         db.child("UsersGroup")
-                .child(userId)
+                .child(userEntity.getUserId())
                 .setValue(group.toString());
+    }
+
+    public static void updateUserInDB(UserEntity userEntity, SexualGroup group){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+
+        DatabaseReference user = db.child("Users")
+                .child(group.toString())
+                .child(userEntity.getUserId());
+
+        user.child("name").setValue(userEntity.getName());
+        user.child("description").setValue(userEntity.getDescription());
+
+        db.child("UsersGroup")
+                .child(userEntity.getUserId())
+                .setValue(group.toString());
+    }
+
+    public static void updateUserInDB(String userId, SexualGroup group, Map userInfo){
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+
+        DatabaseReference user = db.child("Users")
+                .child(group.toString())
+                .child(userId);
+
+        user.updateChildren(userInfo);
+    }
+
+    public interface UserDataCallback{
+        void UserData(UserEntity userEntity);
+    }
+    public static void getUserData(String userId, SexualGroup group, UserDataCallback callback){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("Users").child(group.toString()).child(userId);
+        UserEntity userEntity = new UserEntity().setUserId(userId);
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                userEntity.setName(snapshot.child("name").getValue().toString());
+                userEntity.setDescription(snapshot.child("description").getValue().toString());
+                // TODO delete
+                if ( snapshot.child("profileImageUrl").getValue() != null) {
+                    userEntity.setProfileImageUrl(snapshot.child("profileImageUrl").getValue().toString());
+                }
+                callback.UserData(userEntity);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     public static SexualGroup getSexualGroup(String gender, String pref) throws GendersStringException {
@@ -173,9 +227,10 @@ public class UserOperator {
 
     public static class GendersStringException extends Exception{ }
 
-    public static interface UserOperatorCallback{
+    public interface UserOperatorCallback{
         void operationFailed(String msg);
         void operationSucceeded();
     }
+
 
 }

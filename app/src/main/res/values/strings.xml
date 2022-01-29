@@ -8,4 +8,10 @@
     <string name="empty_pass">"password is empty"</string>
     <string name="signup_empty_name">"name is empty"</string>
 
+<!--    KEYS-->
+    <string name="key_bundle">BUNDLE_KEY</string>
+    <string name="key_currentUserId">CURRENT_USER_ID_KEY</string>
+    <string name="key_currentUserData">CURRENT_USER_DATA_KEY</string>
+    <string name="key_currentUserSexualGroup">CURRENT_USER_SEXUAL_GROUP_KEY</string>
+
 </resources>
