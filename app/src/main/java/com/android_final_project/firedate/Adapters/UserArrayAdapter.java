@@ -1,4 +1,4 @@
-package com.android_final_project.firedate.data;
+package com.android_final_project.firedate.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,18 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.android_final_project.firedate.R;
+import com.android_final_project.firedate.data.UserEntity;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-public class UserArrayAdpter extends ArrayAdapter<UserEntity> {
+public class UserArrayAdapter extends ArrayAdapter<UserEntity> {
 
     private Context context;
     private ImageView   card_IMG_image  ;
     private TextView    card_TXT_name   ;
 
 
-    public UserArrayAdpter(@NonNull Context context, int resource, @NonNull List<UserEntity> objects) {
+    public UserArrayAdapter(@NonNull Context context, int resource, @NonNull List<UserEntity> objects) {
         super(context, resource, objects);
         this.context = context;
     }
@@ -31,7 +32,7 @@ public class UserArrayAdpter extends ArrayAdapter<UserEntity> {
         UserEntity userEntity = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.card, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_swipe_card, parent, false);
         }
 
         findViews(convertView);

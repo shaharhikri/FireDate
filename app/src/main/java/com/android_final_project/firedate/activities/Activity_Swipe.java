@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.AuthSingleton;
-import com.android_final_project.firedate.data.UserArrayAdpter;
+import com.android_final_project.firedate.Adapters.UserArrayAdapter;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +40,7 @@ public class Activity_Swipe extends AppCompatActivity {
     private ArrayList<UserEntity> cardList;
     private ArrayList<String> cardsId = new ArrayList<>();
 //    private ArrayAdapter<String> arrayAdapter;
-    private UserArrayAdpter arrayAdapter;
+    private UserArrayAdapter arrayAdapter;
     private int i;
 
     private SwipeFlingAdapterView flingContainer;
@@ -48,6 +48,7 @@ public class Activity_Swipe extends AppCompatActivity {
     private Button swipe_BTN_right;
     private Button swipe_BTN_logout;
     private Button swipe_BTN_settings;
+    private Button swipe_BTN_chats;
     private TextView swipe_TXT_print;
 
     private UserOperator userOperator;
@@ -119,6 +120,7 @@ public class Activity_Swipe extends AppCompatActivity {
         swipe_BTN_right = findViewById(R.id.swipe_BTN_right);
         swipe_BTN_logout = findViewById(R.id.swipe_BTN_logout);
         swipe_BTN_settings = findViewById(R.id.swipe_BTN_settings);
+        swipe_BTN_chats = findViewById(R.id.swipe_BTN_chats);
         swipe_TXT_print = findViewById(R.id.swipe_TXT_print);
     }
 
@@ -131,7 +133,8 @@ public class Activity_Swipe extends AppCompatActivity {
         swipe_BTN_settings.setOnClickListener(v -> {
             changeActivity(Activity_Settings.class);
             finish();});
-
+        swipe_BTN_chats.setOnClickListener(v -> {
+            changeActivity(Activity_ChatList.class);});
     }
 
     private void changeActivity(Class<?> activity) {
@@ -146,7 +149,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
         initCardList(userPreferenceGroups);
 
-        arrayAdapter = new UserArrayAdpter(this, R.layout.card, cardList);
+        arrayAdapter = new UserArrayAdapter(this, R.layout.item_swipe_card, cardList);
 
         flingContainer.setAdapter(arrayAdapter);
         flingContainer.setFlingListener(
@@ -225,7 +228,6 @@ public class Activity_Swipe extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    Toast.makeText(Activity_Swipe.this, "Match!", Toast.LENGTH_SHORT).show();
                     usersDb
                             .child(sexualPreferenceGroups.toString())
                             .child(otherUser.getUserId())
@@ -240,6 +242,7 @@ public class Activity_Swipe extends AppCompatActivity {
                             .child("matches")
                             .child(otherUser.getUserId())
                             .setValue(true);
+                    Toast.makeText(Activity_Swipe.this, "Match!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -267,17 +270,19 @@ public class Activity_Swipe extends AppCompatActivity {
             }catch (Exception e){
                 nodeId = null;
             }
-            if (nodeId == null)
+            if (nodeId == null) {
                 query = usersDb
                         .child(sg.toString())
                         .orderByKey()
                         .limitToFirst(cardsPerPage);
-            else
+            }
+            else {
                 query = usersDb
                         .child(sg.toString())
                         .orderByKey()
                         .startAt(nodeId)
                         .limitToFirst(cardsPerPage);
+            }
 
             int finalI = i;
             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -288,9 +293,9 @@ public class Activity_Swipe extends AppCompatActivity {
                                 userSnapshot.getKey(),
                                 userSnapshot.child("name").getValue().toString(),
                                 userSnapshot.child("description").getValue().toString(),
-                                userSnapshot.child("profileImgUrl").getValue() == null ?
+                                userSnapshot.child("profileImageUrl").getValue() == null ?
                                         null :
-                                        userSnapshot.child("profileImgUrl").getValue().toString()
+                                        userSnapshot.child("profileImageUrl").getValue().toString()
                                 );
                         // TODO: check if show this person to User(duplicate)
                         if(!otherUser.getUserId().equals(currentUserId)
@@ -318,10 +323,6 @@ public class Activity_Swipe extends AppCompatActivity {
             });
         }
     }
-
-
-
-
 
     @Override
     public void onBackPressed() {

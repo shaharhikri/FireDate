@@ -17,6 +17,9 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.FireDate">
         <activity
+            android:name=".activities.Activity_ChatList"
+            android:exported="false" />
+        <activity
             android:name=".activities.Activity_Settings"
             android:exported="false" />
         <activity
