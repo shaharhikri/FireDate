@@ -3,6 +3,7 @@ package com.android_final_project.firedate.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.UserOperator;
+import com.google.android.material.button.MaterialButton;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +11,8 @@ import android.widget.Button;
 
 public class Activity_Entry extends AppCompatActivity {
 
-    Button entry_BTN_login;
-    Button entry_BTN_signup;
+    MaterialButton entry_BTN_login;
+    MaterialButton entry_BTN_signup;
 
 
     @Override

@@ -1,19 +1,40 @@
 package com.android_final_project.firedate.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.android_final_project.firedate.Adapters.ChatListAdapter;
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.ChatListEntity;
+import com.android_final_project.firedate.data.UserEntity;
+import com.android_final_project.firedate.data.UserOperator;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Activity_ChatList extends AppCompatActivity {
+
+    private Bundle bundle;
+
+    private DatabaseReference matchesDb;
+    private DatabaseReference usersDb;
+
+    private UserOperator userOperator;
+
+    private UserEntity currentUserEntity;
+    private UserOperator.SexualGroup currentUserSexualGroup;
+    private String currentUserId;
 
     private RecyclerView chatList_RCV_recyclerView;
     private RecyclerView.Adapter adapter;
@@ -26,18 +47,90 @@ public class Activity_ChatList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_list);
 
+
+        this.bundle = getIntent().getBundleExtra(getString(R.string.key_bundle));
+        initBundle();
+        initDB();
+
         findViews();
         initViews();
         setRecyclerView();
-        mockData();
+        getUserMatchId();
     }
 
-    private void mockData() {
-        for (int i = 0; i < 100; i++) {
-            ChatListEntity tmp = new ChatListEntity("ID: " + i, "name: " + i, "https://www.nicepng.com/png/detail/367-3671905_person-icon-person-icon-silhouette.png", "08:22AM");
-            dataSetMatches.add(tmp);
-        }
-        adapter.notifyDataSetChanged();
+    private void initDB() {
+        usersDb = FirebaseDatabase.getInstance().getReference()
+                .child("Users");
+        matchesDb = usersDb
+                .child(currentUserSexualGroup.toString())
+                .child(currentUserId)
+                .child("swipes")
+                .child("matches");
+
+        matchesDb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    for (DataSnapshot match: snapshot.getChildren()) {
+                        fetchMatchInformation(match.getKey());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void fetchMatchInformation(String key) {
+        UserOperator.getUserGroup(key, sexualGroup -> {
+            DatabaseReference otherUserRef = usersDb
+                    .child(sexualGroup.toString())
+                    .child(key);
+            otherUserRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()){
+                        String userID = snapshot.getKey();
+
+                        String name = "";
+                        String profileImageUrl = "";
+                        if (snapshot.child("name").getValue() != null){
+                            name = snapshot.child("name").getValue().toString();
+                        }
+                        if (snapshot.child("profileImageUrl").getValue() != null){
+                            profileImageUrl = snapshot.child("profileImageUrl").getValue().toString();
+                        }
+
+                        ChatListEntity tmp = new ChatListEntity(userID, name, profileImageUrl, "08:22AM");
+                        dataSetMatches.add(tmp);
+                        adapter.notifyDataSetChanged();
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        });
+    }
+
+    private void initBundle() {
+        currentUserId = bundle.getString(getString(R.string.key_currentUserId));
+        String currentUserSexualGroupStr = bundle.getString(getString(R.string.key_currentUserSexualGroup));
+        currentUserSexualGroup = UserOperator.SexualGroup.valueOf(currentUserSexualGroupStr);
+
+        String currentUserEntityStr = bundle.getString(getString(R.string.key_currentUserData));
+        currentUserEntity = new Gson().fromJson(currentUserEntityStr, UserEntity.class);
+
+    }
+
+    private void getUserMatchId() {
+
     }
 
     private void setRecyclerView() {
