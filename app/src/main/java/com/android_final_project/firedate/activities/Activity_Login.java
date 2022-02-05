@@ -6,17 +6,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.UserOperator;
 import com.android_final_project.firedate.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class Activity_Login extends AppCompatActivity {
 
-    private EditText login_TXTF_email;
-    private EditText login_TXTF_password;
-    private Button   login_BTN_signup;
+//    private EditText login_TXTF_email;
+    private TextInputEditText login_TXTF_email;
+    private TextInputEditText login_TXTF_password;
+    private MaterialButton login_BTN_signup;
+    private TextView login_error_msg;
 
     private UserOperator userOperator;
 
@@ -36,7 +42,8 @@ public class Activity_Login extends AppCompatActivity {
         userOperator = new UserOperator(this, new UserOperator.UserOperatorCallback() {
             @Override
             public void operationFailed(String msg) {
-                Toast.makeText(Activity_Login.this,msg,Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Activity_Login.this,msg,Toast.LENGTH_SHORT).show();
+                login_error_msg.setText(msg);
             }
 
             @Override
@@ -50,6 +57,7 @@ public class Activity_Login extends AppCompatActivity {
         login_TXTF_email = findViewById(R.id.login_TXTF_email);
         login_TXTF_password = findViewById(R.id.login_TXTF_password);
         login_BTN_signup = findViewById(R.id.login_BTN_signup);
+        login_error_msg = findViewById(R.id.login_error_msg);
     }
 
     private void initViews(){

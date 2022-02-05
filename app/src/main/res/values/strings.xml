@@ -13,5 +13,18 @@
     <string name="key_currentUserId">CURRENT_USER_ID_KEY</string>
     <string name="key_currentUserData">CURRENT_USER_DATA_KEY</string>
     <string name="key_currentUserSexualGroup">CURRENT_USER_SEXUAL_GROUP_KEY</string>
+    <string name="key_other_user_id">OTHER_USER_ID_KEY</string>
+    <string name="key_other_user_sexual_group">OTHER_USER_SEXUAL_GROUP_KEY</string>
+
+    <!--    XML TEXTS-->
+    <string name="welcome_back_header">Welcome Back!</string>
+    <string name="login_to_continue_header">Login to continue!</string>
+    <string name="login_header">Login</string>
+
+    <string name="login_button">Login</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="email_edit_text">Email</string>
+    <string name="password_edit_text">Password</string>
+
 
 </resources>

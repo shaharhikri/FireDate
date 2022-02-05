@@ -2,14 +2,16 @@ package com.android_final_project.firedate.data;
 
 public class ChatListEntity {
     private String userId;
+    private String userSexualGroup;
     private String name;
     private String ProfileImageUrl;
     private String time;
 
     public ChatListEntity() { }
 
-    public ChatListEntity(String userId, String name, String profileImageUrl, String time) {
+    public ChatListEntity(String userId, String userSexualGroup, String name, String profileImageUrl, String time) {
         this.userId = userId;
+        this.userSexualGroup = userSexualGroup;
         this.name = name;
         ProfileImageUrl = profileImageUrl;
         this.time = time;
@@ -21,6 +23,15 @@ public class ChatListEntity {
 
     public ChatListEntity setUserId(String userId) {
         this.userId = userId;
+        return this;
+    }
+
+    public String getUserSexualGroup() {
+        return userSexualGroup;
+    }
+
+    public ChatListEntity setUserSexualGroup(String userSexualGroup) {
+        this.userSexualGroup = userSexualGroup;
         return this;
     }
 

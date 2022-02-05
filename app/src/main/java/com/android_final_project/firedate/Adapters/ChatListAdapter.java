@@ -1,6 +1,8 @@
 package com.android_final_project.firedate.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import com.android_final_project.firedate.R;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android_final_project.firedate.activities.Activity_Chat;
 import com.android_final_project.firedate.data.ChatListEntity;
 import com.bumptech.glide.Glide;
 
@@ -41,6 +44,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     @Override
     public void onBindViewHolder(@NonNull ChatListsViewHolders holder, int position) {
 //        holder.mMatchId.setText(chatListEntities.get(position).getUserId());
+        holder.otherUserID = chatListEntities.get(position).getUserId();
+        holder.otherUserSexualGroup = chatListEntities.get(position).getUserSexualGroup();
         //TODO add time
         holder.chatListItem_TXT_matchName.setText(chatListEntities.get(position).getName());
         if(!chatListEntities.get(position).getProfileImageUrl().equals("default")){
@@ -58,6 +63,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
     public class ChatListsViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private String otherUserID;
+        private String otherUserSexualGroup;
         private ImageView chatListItem_IMG_matchProfile;
         private LinearLayout chatListItem_LLV_rowLayout;
         private TextView chatListItem_TXT_matchName;
@@ -83,7 +90,14 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
         @Override
         public void onClick(View view) {
+            Intent intent = new Intent(context, Activity_Chat.class);
+            Bundle bundle = new Bundle();
 
+            bundle.putString(context.getString(R.string.key_other_user_id), otherUserID);
+            bundle.putString(context.getString(R.string.key_other_user_sexual_group), otherUserSexualGroup);
+
+            intent.putExtra(context.getString(R.string.key_bundle), bundle);
+            context.startActivity(intent);
         }
     }
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="20sp">
+    <ImageView
+        android:id="@+id/chatListItem_IMG_matchProfile"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_gravity="center"
+        />
+    <LinearLayout
+        android:id="@+id/chatListItem_LLV_rowLayout"
+        android:paddingLeft="20sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/chatListItem_TXT_matchName"
+            android:paddingBottom="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Match's Name"
+            />
+        <TextView
+            android:id="@+id/chatListItem_TXT_matchTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Match's Time"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

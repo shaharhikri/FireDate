@@ -104,9 +104,14 @@ public class Activity_ChatList extends AppCompatActivity {
                             profileImageUrl = snapshot.child("profileImageUrl").getValue().toString();
                         }
 
-                        ChatListEntity tmp = new ChatListEntity(userID, name, profileImageUrl, "08:22AM");
-                        dataSetMatches.add(tmp);
-                        adapter.notifyDataSetChanged();
+                        String finalName = name;
+                        String finalProfileImageUrl = profileImageUrl;
+                        UserOperator.getUserGroup(key, sexualGroup -> {
+                            ChatListEntity tmp = new ChatListEntity(userID, sexualGroup.toString(), finalName, finalProfileImageUrl, "08:22AM");
+                            dataSetMatches.add(tmp);
+                            adapter.notifyDataSetChanged();
+                        });
+
 
                     }
                 }
