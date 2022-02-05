@@ -70,6 +70,8 @@ public class Activity_Swipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
 
+        // TODO start freeze
+
         initUserOperator();
         currentUserId = AuthSingleton.getMe().getCurrentUser().getUid();
         usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -78,6 +80,8 @@ public class Activity_Swipe extends AppCompatActivity {
         initViews();
 
         initValues();
+
+        // TODO finish freeze
     }
 
     private void initValues() {
