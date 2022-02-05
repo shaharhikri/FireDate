@@ -149,10 +149,12 @@ public class Activity_Settings extends AppCompatActivity {
                     // update bundle
                     currentUserEntity.setProfileImageUrl(downloadPhotoUrl.toString());
                     bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(currentUserEntity));
+
+                    changeActivity(Activity_Swipe.class);
                 });
             });
-
-
+        } else {
+            changeActivity(Activity_Swipe.class);
         }
     }
 
