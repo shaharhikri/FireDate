@@ -7,17 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".activities.Activity_Chat">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_RCV_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/chat_LL_sendMsg">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chat_RCV_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical" />
-    </androidx.core.widget.NestedScrollView>
+        android:layout_above="@+id/chat_LL_sendMsg" />
 
     <LinearLayout
         android:id="@+id/chat_LL_sendMsg"
