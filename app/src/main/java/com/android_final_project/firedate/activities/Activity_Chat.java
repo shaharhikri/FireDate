@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Activity_Chat extends AppCompatActivity {
 
@@ -35,8 +36,9 @@ public class Activity_Chat extends AppCompatActivity {
     private String otherUserSexualGroup;
 
     private RecyclerView chat_RCV_recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
+    private ChatAdapter adapter;
+//    private RecyclerView.LayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
 
     private ArrayList<ChatEntity> dataSetChats = new ArrayList<ChatEntity>();
 
@@ -45,6 +47,8 @@ public class Activity_Chat extends AppCompatActivity {
 
     private EditText chat_TXTF_message;
     private MaterialButton chat_BTN_send;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +86,14 @@ public class Activity_Chat extends AppCompatActivity {
                         currentUserMsg = true;
                     }
 
+
+
                     ChatEntity entity = new ChatEntity(msg, currentUserMsg);
                     dataSetChats.add(entity);
                     adapter.notifyDataSetChanged();
+
+                    int pos = chat_RCV_recyclerView.getAdapter().getItemCount();
+                    chat_RCV_recyclerView.smoothScrollToPosition(pos);
                 }
 
 
@@ -100,7 +109,8 @@ public class Activity_Chat extends AppCompatActivity {
             };
 
             @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) { }
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+            }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) { }
@@ -124,14 +134,13 @@ public class Activity_Chat extends AppCompatActivity {
 
     private void findViews() {
         chat_RCV_recyclerView = findViewById(R.id.chat_RCV_recyclerView);
-
         chat_TXTF_message = findViewById(R.id.chat_TXTF_message);
         chat_BTN_send = findViewById(R.id.chat_BTN_send);
     }
 
     private void initViews() {
-        chat_RCV_recyclerView.setNestedScrollingEnabled(false);
-        chat_RCV_recyclerView.setHasFixedSize(false);
+//        chat_RCV_recyclerView.setNestedScrollingEnabled(false);
+//        chat_RCV_recyclerView.setHasFixedSize(false);
 
         chat_BTN_send.setOnClickListener(view -> {
             String msg = chat_TXTF_message.getText().toString();
@@ -156,10 +165,11 @@ public class Activity_Chat extends AppCompatActivity {
     }
 
     private void setRecyclerView() {
-        layoutManager = new LinearLayoutManager(Activity_Chat.this);
+        layoutManager = new LinearLayoutManager(this);
         chat_RCV_recyclerView.setLayoutManager(layoutManager);
-        adapter = new ChatAdapter(getDataSetMatches(), Activity_Chat.this);
+        adapter = new ChatAdapter(getDataSetMatches(), this);
         chat_RCV_recyclerView.setAdapter(adapter);
+
     }
 
     private List<ChatEntity> getDataSetMatches() {
