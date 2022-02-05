@@ -6,39 +6,121 @@
     android:layout_height="match_parent"
     tools:context=".activities.Activity_Settings"
     android:orientation="vertical"
+    android:background="#eef4f6"
     android:padding="20dp">
 
-    <ImageView
-        android:id="@+id/settings_IMG_profile"
-        android:layout_width="256dp"
-        android:layout_height="256dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_marginBottom="20dp"/>
-
-    <EditText
-        android:id="@+id/settings_ETXT_name"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="name"
-        android:layout_marginBottom="20dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="12">
 
-    <EditText
-        android:id="@+id/settings_ETXT_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="description"
-        android:layout_marginBottom="20dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/settings_BTN_confirm"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="confirm"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_title"
+                android:textSize="36sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:layout_marginTop="18dp"
+                android:layout_marginHorizontal="8dp"
+                android:layout_gravity="center"
+                />
 
-    <Button
-        android:id="@+id/settings_BTN_back"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="back"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/scroll_instruction"
+                android:textSize="18sp"
+                android:textColor="@color/myPrimary"
+                android:layout_marginTop="5dp"
+                android:layout_marginHorizontal="8dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/change_profile_img"
+                android:textSize="16sp"
+                android:textColor="@color/myPrimary"
+                android:layout_marginTop="22dp"
+                android:layout_marginHorizontal="8dp"
+                />
+
+            <ImageView
+                android:id="@+id/settings_IMG_profile"
+                android:layout_width="256dp"
+                android:layout_height="256dp"
+                android:src="@drawable/profile_img_default"
+                android:layout_marginTop="2dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginHorizontal="30dp"
+                android:hint="@string/name_edit_text"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/settings_ETXT_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_marginHorizontal="30dp"
+                android:hint="@string/description_edit_text"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/settings_ETXT_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:inputType="textMultiLine"
+                    android:gravity="top"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/settings_BTN_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="22dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="@string/confirm"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/button_light"
+                app:cornerRadius="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/settings_BTN_back"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginHorizontal="40dp"
+                android:text="@string/back"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/button_dark"
+                app:cornerRadius="8dp" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

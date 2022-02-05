@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:background="#eef4f6"
     tools:context=".activities.Activity_Entry">
 
     <com.google.android.material.textview.MaterialTextView
@@ -23,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/login_to_continue_header"
-        android:textColor="#404040"
+        android:textColor="@color/myPrimary"
         android:textSize="18sp"
         android:textStyle="bold"/>
 

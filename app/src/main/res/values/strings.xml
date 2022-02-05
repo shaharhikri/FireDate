@@ -27,6 +27,17 @@
     <string name="email_edit_text">Email</string>
     <string name="password_edit_text">Password</string>
     <string name="send_button_text"><![CDATA[>]]></string>
-
+    <string name="verifypassword_edit_text">Verify Password</string>
+    <string name="description_edit_text">Description</string>
+    <string name="name_edit_text">Name</string>
+    <string name="signup_button">Sign Up</string>
+    <string name="signup_title">Create Account</string>
+    <string name="age_edit_text">Age</string>
+    <string name="upload_profile_img">Upload Profile Image</string>
+    <string name="scroll_instruction">Scroll Down To Continue</string>
+    <string name="settings_title">Settings</string>
+    <string name="change_profile_img">Tap On Your Profile Picture To Change It</string>
+    <string name="back">Back</string>
+    <string name="confirm">Confirm</string>
 
 </resources>
