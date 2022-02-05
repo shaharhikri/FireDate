@@ -83,9 +83,11 @@ public class Activity_Settings extends AppCompatActivity {
         settings_ETXT_name.setText(name);
         settings_ETXT_description.setText(description);
 
-        Glide.with(getApplication())
-                .load(profileImgUrl)
-                .into(settings_IMG_profile);
+        if (profileImgUrl != null) {
+            Glide.with(getApplication())
+                    .load(profileImgUrl)
+                    .into(settings_IMG_profile);
+        }
 
         settings_IMG_profile.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
