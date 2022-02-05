@@ -182,10 +182,6 @@ public class Activity_Swipe extends AppCompatActivity {
                     public void onAdapterAboutToEmpty(int itemsInAdapter) {
                         // Ask for more data here
                         getUsers(userPreferenceGroups, cardsId);
-//                        cardList.add("XML "+i);
-//                        arrayAdapter.notifyDataSetChanged();
-//                        Log.d("LIST", "notified");
-//                        i++;
                     }
 
                     @Override
@@ -228,20 +224,24 @@ public class Activity_Swipe extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
+                    String chatKey = FirebaseDatabase.getInstance().getReference().child("Chat").push().getKey();
+
                     usersDb
                             .child(sexualPreferenceGroups.toString())
                             .child(otherUser.getUserId())
                             .child("swipes")
                             .child("matches")
                             .child(currentUserId)
-                            .setValue(true);
+                            .child("ChatId")
+                            .setValue(chatKey);
                     usersDb
                             .child(currentUserSexualGroup.toString())
                             .child(currentUserId)
                             .child("swipes")
                             .child("matches")
                             .child(otherUser.getUserId())
-                            .setValue(true);
+                            .child("ChatId")
+                            .setValue(chatKey);
                     Toast.makeText(Activity_Swipe.this, "Match!", Toast.LENGTH_SHORT).show();
                 }
             }

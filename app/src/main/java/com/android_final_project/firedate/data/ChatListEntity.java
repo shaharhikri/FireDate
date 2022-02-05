@@ -1,6 +1,7 @@
 package com.android_final_project.firedate.data;
 
 public class ChatListEntity {
+    private String chatId;
     private String userId;
     private String userSexualGroup;
     private String name;
@@ -9,12 +10,22 @@ public class ChatListEntity {
 
     public ChatListEntity() { }
 
-    public ChatListEntity(String userId, String userSexualGroup, String name, String profileImageUrl, String time) {
+    public ChatListEntity(String chatId, String userId, String userSexualGroup, String name, String profileImageUrl, String time) {
+        this.chatId = chatId;
         this.userId = userId;
         this.userSexualGroup = userSexualGroup;
         this.name = name;
         ProfileImageUrl = profileImageUrl;
         this.time = time;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public ChatListEntity setChatId(String chatId) {
+        this.chatId = chatId;
+        return this;
     }
 
     public String getUserId() {

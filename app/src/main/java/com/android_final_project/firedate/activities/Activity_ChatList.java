@@ -95,25 +95,38 @@ public class Activity_ChatList extends AppCompatActivity {
                     if (snapshot.exists()){
                         String userID = snapshot.getKey();
 
-                        String name = "";
-                        String profileImageUrl = "";
-                        if (snapshot.child("name").getValue() != null){
-                            name = snapshot.child("name").getValue().toString();
-                        }
-                        if (snapshot.child("profileImageUrl").getValue() != null){
-                            profileImageUrl = snapshot.child("profileImageUrl").getValue().toString();
-                        }
 
-                        String finalName = name;
-                        String finalProfileImageUrl = profileImageUrl;
+                        String chatId = getValue(snapshot, "ChatId");
+                        String name = getValue(snapshot, "name");
+                        String profileImageUrl = getValue(snapshot, "profileImageUrl");
+
+//                        if (snapshot.child("ChatId").getValue() != null){
+//                            chatId = snapshot.child("ChatId").getValue().toString();
+//                        }
+//                        if (snapshot.child("name").getValue() != null){
+//                            name = snapshot.child("name").getValue().toString();
+//                        }
+//                        if (snapshot.child("profileImageUrl").getValue() != null){
+//                            profileImageUrl = snapshot.child("profileImageUrl").getValue().toString();
+//                        }
+
+
                         UserOperator.getUserGroup(key, sexualGroup -> {
-                            ChatListEntity tmp = new ChatListEntity(userID, sexualGroup.toString(), finalName, finalProfileImageUrl, "08:22AM");
+                            ChatListEntity tmp = new ChatListEntity(chatId, userID, sexualGroup.toString(), name, profileImageUrl, "08:22AM");
                             dataSetMatches.add(tmp);
                             adapter.notifyDataSetChanged();
                         });
 
 
                     }
+                }
+
+                private String getValue(DataSnapshot snapshot, String key) {
+                    String output = "";
+                    if (snapshot.child(key).getValue() != null){
+                        output = snapshot.child(key).getValue().toString();
+                    }
+                    return output;
                 }
 
                 @Override

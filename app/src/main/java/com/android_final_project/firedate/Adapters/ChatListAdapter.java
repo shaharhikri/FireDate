@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android_final_project.firedate.activities.Activity_Chat;
+import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.ChatListEntity;
 import com.bumptech.glide.Glide;
 
@@ -44,6 +45,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     @Override
     public void onBindViewHolder(@NonNull ChatListsViewHolders holder, int position) {
 //        holder.mMatchId.setText(chatListEntities.get(position).getUserId());
+        holder.chatID = chatListEntities.get(position).getChatId();
         holder.otherUserID = chatListEntities.get(position).getUserId();
         holder.otherUserSexualGroup = chatListEntities.get(position).getUserSexualGroup();
         //TODO add time
@@ -63,6 +65,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
     public class ChatListsViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private String chatID;
         private String otherUserID;
         private String otherUserSexualGroup;
         private ImageView chatListItem_IMG_matchProfile;
@@ -92,6 +95,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         public void onClick(View view) {
             Intent intent = new Intent(context, Activity_Chat.class);
             Bundle bundle = new Bundle();
+
+            bundle.putString(context.getString(R.string.key_chat_id), chatID);
+
+            bundle.putString(context.getString(R.string.key_currentUserId), AuthSingleton.getMe().getUid());
 
             bundle.putString(context.getString(R.string.key_other_user_id), otherUserID);
             bundle.putString(context.getString(R.string.key_other_user_sexual_group), otherUserSexualGroup);

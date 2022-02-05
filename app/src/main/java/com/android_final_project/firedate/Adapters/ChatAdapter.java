@@ -2,7 +2,9 @@ package com.android_final_project.firedate.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +43,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull ChatsViewHolders holder, int position) {
+        ChatEntity currentChat = chatEntities.get(position);
+        holder.chat_TXT_message.setText(currentChat.getMessage());
+        if(currentChat.isCurrentUser()){
+            holder.chat_TXT_message     .setGravity(Gravity.END);
+            holder.chat_TXT_message     .setTextColor(Color.parseColor("#404040"));
+            holder.chat_LL_container    .setBackgroundColor(Color.parseColor("#F4F4F4"));
+        } else {
+            holder.chat_TXT_message     .setGravity(Gravity.START);
+            holder.chat_TXT_message     .setTextColor(Color.parseColor("#FFFFFF"));
+            holder.chat_LL_container    .setBackgroundColor(Color.parseColor("#2DB4C8"));
+        }
 
     }
 
@@ -51,8 +64,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolde
 
     public class ChatsViewHolders extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private String otherUserID;
-        private String otherUserSexualGroup;
+        private LinearLayout    chat_LL_container;
+        private TextView        chat_TXT_message;
+
 
 
         public ChatsViewHolders(@NonNull View itemView) {
@@ -66,18 +80,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolde
         }
 
         private void findViews(View itemView) {
+            chat_LL_container = itemView.findViewById(R.id.chat_LL_container);
+            chat_TXT_message = itemView.findViewById(R.id.chat_TXT_message);
         }
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(context, Activity_Chat.class);
-            Bundle bundle = new Bundle();
 
-            bundle.putString(context.getString(R.string.key_other_user_id), otherUserID);
-            bundle.putString(context.getString(R.string.key_other_user_sexual_group), otherUserSexualGroup);
-
-            intent.putExtra(context.getString(R.string.key_bundle), bundle);
-            context.startActivity(intent);
         }
     }
 }
