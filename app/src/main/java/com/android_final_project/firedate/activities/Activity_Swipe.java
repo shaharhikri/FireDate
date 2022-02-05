@@ -18,6 +18,7 @@ import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.Adapters.UserArrayAdapter;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -25,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.lorentzos.flingswipe.FlingCardListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -44,12 +46,12 @@ public class Activity_Swipe extends AppCompatActivity {
     private int i;
 
     private SwipeFlingAdapterView flingContainer;
-    private Button swipe_BTN_left;
-    private Button swipe_BTN_right;
+    private FloatingActionButton swipe_BTN_left;
+    private FloatingActionButton swipe_BTN_right;
     private Button swipe_BTN_logout;
     private Button swipe_BTN_settings;
     private Button swipe_BTN_chats;
-    private TextView swipe_TXT_print;
+//    private TextView swipe_TXT_print;
 
     private UserOperator userOperator;
     private String currentUserId;
@@ -121,12 +123,22 @@ public class Activity_Swipe extends AppCompatActivity {
         swipe_BTN_logout = findViewById(R.id.swipe_BTN_logout);
         swipe_BTN_settings = findViewById(R.id.swipe_BTN_settings);
         swipe_BTN_chats = findViewById(R.id.swipe_BTN_chats);
-        swipe_TXT_print = findViewById(R.id.swipe_TXT_print);
+//        swipe_TXT_print = findViewById(R.id.swipe_TXT_print);
     }
 
     private void initViews(){
-        swipe_BTN_left.setOnClickListener(v -> flingContainer.getTopCardListener().selectLeft());
-        swipe_BTN_right.setOnClickListener(v -> flingContainer.getTopCardListener().selectRight());
+        swipe_BTN_left.setOnClickListener(v -> {
+            try {
+                flingContainer.getTopCardListener().selectLeft();
+            }
+            catch(NullPointerException e){ }
+        });
+        swipe_BTN_right.setOnClickListener(v -> {
+            try {
+                flingContainer.getTopCardListener().selectRight();
+            }
+            catch(NullPointerException e){ }
+        });
         swipe_BTN_logout.setOnClickListener(v -> {
             userOperator.logout();
             finish();});
@@ -167,7 +179,7 @@ public class Activity_Swipe extends AppCompatActivity {
                         //Do something on the left!
                         UserEntity obj = (UserEntity) dataObject;
                         handleSwipe(obj, "left");
-                        swipe_TXT_print.setText(obj.getName() + " Left!");
+//                        swipe_TXT_print.setText(obj.getName() + " Left!");
 
                     }
 
@@ -175,7 +187,7 @@ public class Activity_Swipe extends AppCompatActivity {
                     public void onRightCardExit(Object dataObject) {
                         UserEntity obj = (UserEntity) dataObject;
                         handleSwipe(obj, "right");
-                        swipe_TXT_print.setText(obj.getName() + " Right!");
+//                        swipe_TXT_print.setText(obj.getName() + " Right!");
                     }
 
                     @Override
@@ -198,7 +210,7 @@ public class Activity_Swipe extends AppCompatActivity {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
 //                Toast.makeText(MainActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
-                swipe_TXT_print.setText(dataObject+" Clicked!");
+//                swipe_TXT_print.setText(dataObject+" Clicked!");
             }
         });
     }

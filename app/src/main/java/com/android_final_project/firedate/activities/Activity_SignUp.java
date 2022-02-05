@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.UserOperator;
 import com.android_final_project.firedate.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,16 +17,16 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 public class Activity_SignUp extends AppCompatActivity {
-    private EditText signup_TXTF_email;
-    private EditText signup_TXTF_password;
-    private EditText signup_TXTF_verifypassword;
-    private EditText signup_TXTF_description;
+    private TextInputEditText signup_TXTF_email;
+    private TextInputEditText signup_TXTF_password;
+    private TextInputEditText signup_TXTF_verifypassword;
+    private TextInputEditText signup_TXTF_description;
 
     private RadioGroup signup_gender_radiogroup;
     private RadioGroup signup_preference_radiogroup;
 
-    private EditText signup_TXTF_name;
-    private Button signup_BTN_signup;
+    private TextInputEditText signup_TXTF_name;
+    private MaterialButton signup_BTN_signup;
 
     private UserOperator userOperator;
 

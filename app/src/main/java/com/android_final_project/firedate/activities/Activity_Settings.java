@@ -7,6 +7,8 @@ import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
 import com.bumptech.glide.Glide;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -30,10 +32,10 @@ public class Activity_Settings extends AppCompatActivity {
     private Bundle bundle;
 
     private ImageView   settings_IMG_profile;
-    private EditText    settings_ETXT_name;
-    private EditText    settings_ETXT_description;
-    private Button      settings_BTN_confirm;
-    private Button      settings_BTN_back;
+    private TextInputEditText settings_ETXT_name;
+    private TextInputEditText    settings_ETXT_description;
+    private MaterialButton      settings_BTN_confirm;
+    private MaterialButton settings_BTN_back;
 
     private DatabaseReference usersDb;
     private UserOperator.SexualGroup currentUserSexualGroup;

@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/login_to_continue_header"
-        android:textColor="#404040"
+        android:textColor="@color/myPrimary"
         android:textSize="18sp"
         android:textStyle="bold"/>
 
