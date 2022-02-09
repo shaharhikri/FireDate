@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#eef4f6"
     tools:context=".activities.Activity_Swipe">
 
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#eef4f6">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/swipe_BTN_logout"
@@ -35,63 +41,26 @@
                 android:text="chats" />
 
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/swipe_BTN_3dots"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|left"
-            android:layout_marginBottom="18dp"
-            android:layout_marginHorizontal="18dp"
-            android:outlineAmbientShadowColor="#00838383"
-            android:outlineSpotShadowColor="#00838383"
-            app:srcCompat="@drawable/ic_3dots"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/swipe_BTN_3dots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginBottom="18dp"
+                android:layout_marginHorizontal="18dp"
+                android:outlineAmbientShadowColor="#00838383"
+                android:outlineSpotShadowColor="#00838383"
+                app:srcCompat="@drawable/ic_3dots"/>
 
-    </LinearLayout>
+        </LinearLayout>
 
-
-    <com.lorentzos.flingswipe.SwipeFlingAdapterView
-        android:id="@+id/swipe_FRM_cards"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="7"
-        app:rotation_degrees="15.5"
-        tools:context=".activities.Activity_Swipe" />
-
-
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:layout_gravity="center_horizontal|bottom"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintTop_toBottomOf="parent"-->
-<!--        tools:layout_editor_absoluteX="7dp">-->
-
-<!--        <Button-->
-<!--            android:id="@+id/swipe_BTN_left"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="10dp"-->
-<!--            android:text="Left" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/swipe_BTN_right"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="10dp"-->
-<!--            android:text="Right" />-->
-
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--            android:id="@+id/floating_action_button"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="bottom|right"-->
-<!--            android:layout_margin="16dp"-->
-<!--            android:contentDescription="@string/fab_content_desc"-->
-<!--            app:srcCompat="@drawable/ic_plus_24" />-->
-
-<!--    </LinearLayout>-->
+        <com.lorentzos.flingswipe.SwipeFlingAdapterView
+            android:id="@+id/swipe_FRM_cards"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            app:rotation_degrees="15.5"
+            tools:context=".activities.Activity_Swipe" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,31 +71,62 @@
             app:layout_constraintTop_toBottomOf="parent"
             tools:layout_editor_absoluteX="7dp">
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/swipe_BTN_left"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|right"
-                    android:layout_marginBottom="18dp"
-                    android:layout_marginHorizontal="18dp"
-                    app:backgroundTint="@color/button_light"
-                    app:srcCompat="@drawable/ic_dislike"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/swipe_BTN_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginBottom="18dp"
+                android:layout_marginHorizontal="18dp"
+                app:backgroundTint="@color/button_light"
+                app:srcCompat="@drawable/ic_dislike"/>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"></View>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"></View>
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/swipe_BTN_right"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|left"
-                    android:layout_marginBottom="18dp"
-                    android:layout_marginHorizontal="18dp"
-                    app:backgroundTint="#60CC53"
-                    app:srcCompat="@drawable/ic_like"/>
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/swipe_BTN_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginBottom="18dp"
+                android:layout_marginHorizontal="18dp"
+                app:backgroundTint="#60CC53"
+                app:srcCompat="@drawable/ic_like"/>
 
         </LinearLayout>
+    </LinearLayout>
 
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/swipe_LL_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:background="#000000"
+        android:visibility="visible"
+        android:layout_gravity="center"
+        android:alpha="0.6">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:indeterminate="true" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

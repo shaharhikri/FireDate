@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,7 @@ public class Activity_Swipe extends AppCompatActivity {
     private Button swipe_BTN_logout;
     private Button swipe_BTN_settings;
     private Button swipe_BTN_chats;
+    private LinearLayout swipe_LL_loading;
 //    private TextView swipe_TXT_print;
 
     private UserOperator userOperator;
@@ -71,21 +73,30 @@ public class Activity_Swipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
 
-        // TODO start freeze
+
 
         initUserOperator();
         currentUserId = AuthSingleton.getMe().getCurrentUser().getUid();
         usersDb = FirebaseDatabase.getInstance().getReference().child("Users");
 
         findViews();
-        initViews();
 
         initValues();
+
 
         // TODO finish freeze
     }
 
+    private void loadingAnimationStart() {
+        swipe_LL_loading.setVisibility(View.VISIBLE);
+    }
+
+    private void loadingAnimationEnd() {
+        swipe_LL_loading.setVisibility(View.GONE);
+    }
+
     private void initValues() {
+        loadingAnimationStart();
         bundle = getIntent().getBundleExtra(getString(R.string.key_bundle));
         if (bundle == null) {
             bundle = new Bundle();
@@ -98,12 +109,17 @@ public class Activity_Swipe extends AppCompatActivity {
                     bundle.putString(getString(R.string.key_currentUserId), currentUserId);
                     bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
                     bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
+
+                    initViews();
+                    loadingAnimationEnd();
                 });
             });
         } else {
             String currentUserSexualGroupStr = bundle.getString(getString(R.string.key_currentUserSexualGroup));
             currentUserSexualGroup = UserOperator.SexualGroup.valueOf(currentUserSexualGroupStr);
             initFlingContainer(currentUserSexualGroup.getPreferenceGroups());
+            initViews();
+            loadingAnimationEnd();
         }
     }
 
@@ -129,6 +145,7 @@ public class Activity_Swipe extends AppCompatActivity {
         swipe_BTN_settings = findViewById(R.id.swipe_BTN_settings);
         swipe_BTN_chats = findViewById(R.id.swipe_BTN_chats);
 //        swipe_TXT_print = findViewById(R.id.swipe_TXT_print);
+        swipe_LL_loading = findViewById(R.id.swipe_LL_loading);
     }
 
     private void initViews(){
@@ -320,7 +337,7 @@ public class Activity_Swipe extends AppCompatActivity {
                                 && !userSnapshot.child("swipes").child("left").hasChild(currentUserId)
                                 && !userSnapshot.child("swipes").child("right").hasChild(currentUserId)
                                 && !otherUser.getUserId().equals(lastOtherUserID)
-                                && !cardList.contains(otherUser) // TODO check by ref
+                                && !cardList.contains(otherUser)
                         ){
                             Log.d("pttt", "add user: " + otherUser.getUserId());
                             cardList.add(otherUser);
