@@ -1,6 +1,7 @@
 package com.android_final_project.firedate.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -89,6 +90,16 @@ public class Activity_Swipe extends AppCompatActivity {
 
     private void loadingAnimationStart() {
         swipe_LL_loading.setVisibility(View.VISIBLE);
+    }
+
+    private void loadingAnimationStart(boolean background) {
+        if (background){
+            swipe_LL_loading.setBackgroundColor(Color.parseColor("#AAFFFFFF"));
+        } else {
+            swipe_LL_loading.setBackgroundColor(Color.parseColor("#00FFFFFF"));
+        }
+
+        loadingAnimationStart();
     }
 
     private void loadingAnimationEnd() {
@@ -217,6 +228,12 @@ public class Activity_Swipe extends AppCompatActivity {
                     public void onAdapterAboutToEmpty(int itemsInAdapter) {
                         // Ask for more data here
                         getUsers(userPreferenceGroups, cardsId);
+                        if(cardList.size() == 0){
+                            loadingAnimationStart(false);
+                        } else {
+                            loadingAnimationEnd();
+                        }
+
                     }
 
                     @Override

@@ -17,40 +17,55 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:orientation="horizontal">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/swipe_BTN_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="logout"/>
+                android:text="logout"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/button_light"
+                app:cornerRadius="8dp" />
 
             <Button
                 android:id="@+id/swipe_BTN_settings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="settings" />
+                android:layout_marginHorizontal="6dp"
+                android:text="settings"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/button_light"
+                app:cornerRadius="8dp" />
+
 
             <Button
                 android:id="@+id/swipe_BTN_chats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="chats" />
+                android:text="chats"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/button_light"
+                app:cornerRadius="8dp" />
 
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/swipe_BTN_3dots"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|left"
-                android:layout_marginBottom="18dp"
-                android:layout_marginHorizontal="18dp"
-                android:outlineAmbientShadowColor="#00838383"
-                android:outlineSpotShadowColor="#00838383"
-                app:srcCompat="@drawable/ic_3dots"/>
+<!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                android:id="@+id/swipe_BTN_3dots"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="bottom|left"-->
+<!--                android:layout_marginBottom="18dp"-->
+<!--                android:layout_marginHorizontal="18dp"-->
+<!--                android:outlineAmbientShadowColor="#00838383"-->
+<!--                android:outlineSpotShadowColor="#00838383"-->
+<!--                app:srcCompat="@drawable/ic_3dots"/>-->
 
         </LinearLayout>
 
@@ -105,22 +120,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:background="#000000"
+        android:background="#AAFFFFFF"
         android:visibility="visible"
-        android:layout_gravity="center"
-        android:alpha="0.6">
+        android:layout_gravity="center">
 
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"/>
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:indicatorColor="@color/button_dark"
+                android:layout_gravity="center"
+                android:indeterminate="true" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Looking for \npotential connections"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+        </LinearLayout>
 
-            android:indeterminate="true" />
 
         <View
             android:layout_width="0dp"

@@ -1,5 +1,6 @@
 package com.android_final_project.firedate.Adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,9 @@ import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.UserEntity;
 import com.bumptech.glide.Glide;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class UserArrayAdapter extends ArrayAdapter<UserEntity> {
 
@@ -28,6 +31,7 @@ public class UserArrayAdapter extends ArrayAdapter<UserEntity> {
         this.context = context;
     }
 
+    @SuppressLint("SetTextI18n")
     public View getView(int position, View convertView, ViewGroup parent){
         UserEntity userEntity = getItem(position);
 
@@ -46,10 +50,24 @@ public class UserArrayAdapter extends ArrayAdapter<UserEntity> {
                 .load(userEntity.getProfileImageUrl())
                 .centerCrop()
                 .into(card_IMG_image);
-        card_TXT_name .setText(userEntity.getName());
+
+
+        if (userEntity.getUsersAgeInMillis() == null){
+            Date randomDate = new Date();
+            randomDate.setYear(new Date().getYear() - (new Random().nextInt(12) + 18));
+            userEntity.setUsersAgeInMillis(randomDate.getTime());
+        }
+        String age = Integer.toString(calculateAge(userEntity.getUsersAgeInMillis()));
+
+        card_TXT_name .setText(userEntity.getName() + ", " + age);
 
         return convertView;
     }
+
+    private int calculateAge(Long usersAgeInMillis) {
+        Date birthDay = new Date(usersAgeInMillis);
+        return new Date().getYear() - birthDay.getYear();
+    };
 
     private void findViews(View convertView) {
         card_IMG_image = convertView.findViewById(R.id.card_IMG_image);

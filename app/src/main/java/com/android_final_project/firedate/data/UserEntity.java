@@ -7,15 +7,25 @@ public class UserEntity {
     private String name;
     private String description;
     private String profileImageUrl = null;
+    private Long usersAgeInMillis;
 
 
     public UserEntity() { }
 
+    @Deprecated
     public UserEntity(String userId, String name, String description, String profileImageUrl) {
         this.userId = userId;
         this.name = name;
         this.description = description;
         this.profileImageUrl = profileImageUrl;
+    }
+
+    public UserEntity(String userId, String name, String description, String profileImageUrl, Long usersAgeInMillis) {
+        this.userId = userId;
+        this.name = name;
+        this.description = description;
+        this.profileImageUrl = profileImageUrl;
+        this.usersAgeInMillis = usersAgeInMillis;
     }
 
     public String getUserId() {
@@ -51,6 +61,15 @@ public class UserEntity {
 
     public UserEntity setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
+        return this;
+    }
+
+    public Long getUsersAgeInMillis() {
+        return usersAgeInMillis;
+    }
+
+    public UserEntity setUsersAgeInMillis(Long usersAgeInMillis) {
+        this.usersAgeInMillis = usersAgeInMillis;
         return this;
     }
 

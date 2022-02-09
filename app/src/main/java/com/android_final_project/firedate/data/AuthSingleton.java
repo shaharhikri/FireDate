@@ -61,9 +61,9 @@ public class AuthSingleton {
     }
 
     //Callback classes
-    public static interface AuthCallback{
-        public void LoggedIn();
-        public void LoggedOut();
+    public interface AuthCallback{
+        void LoggedIn();
+        void LoggedOut();
     }
 
     public static class DefaultAuthCallback implements AuthCallback{

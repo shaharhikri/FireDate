@@ -23,6 +23,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -127,10 +128,7 @@ public class Activity_Settings extends AppCompatActivity {
 
         // save image
         if (profileImgPath != null){
-
-            Log.d("pttt", "confirmForm: hello");
-
-            StorageReference ref = FirebaseStorage
+                        StorageReference ref = FirebaseStorage
                     .getInstance()
                     .getReference()
                     .child("profileImages")
@@ -141,7 +139,6 @@ public class Activity_Settings extends AppCompatActivity {
             dateRef.putFile(file).addOnSuccessListener(taskSnapshot -> {
                 // Download file From Firebase Storage
                 dateRef.getDownloadUrl().addOnSuccessListener(downloadPhotoUrl -> {
-                    Log.d("pttt", "onSuccess downloadPhotoUrl: " + downloadPhotoUrl);
                     Map userInfo = new HashMap();
                     userInfo.put("profileImageUrl", downloadPhotoUrl.toString());
                     UserOperator.updateUserInDB(currentUserId, currentUserSexualGroup, userInfo);
@@ -156,13 +153,15 @@ public class Activity_Settings extends AppCompatActivity {
         } else {
             changeActivity(Activity_Swipe.class);
         }
+
+        Toast.makeText(this, "Data Saved!", Toast.LENGTH_SHORT).show();
     }
 
     private void changeActivity(Class<?> activity) {
         Intent intent = new Intent(this, activity);
         bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
         bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(currentUserEntity));
-        intent.putExtra(getString(R.string.key_bundle), bundle);
+//        intent.putExtra(getString(R.string.key_bundle), bundle);
         startActivity(intent);
         finish();
     }

@@ -7,6 +7,8 @@
     <string name="empty_email">Email is empty</string>
     <string name="empty_pass">"password is empty"</string>
     <string name="signup_empty_name">"name is empty"</string>
+    <string name="signup_empty_age">"you must choose date of birth"</string>
+    <string name="signup_empty_img">"you must upload profile image"</string>
 
     <!--    KEYS-->
     <string name="key_bundle">BUNDLE_KEY</string>
@@ -39,5 +41,6 @@
     <string name="change_profile_img">Tap On Your Profile Picture To Change It</string>
     <string name="back">Back</string>
     <string name="confirm">Confirm</string>
+    <string name="date_of_birth_btn">Date of Birth</string>
 
 </resources>

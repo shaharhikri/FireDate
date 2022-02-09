@@ -1,17 +1,23 @@
 package com.android_final_project.firedate.data;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android_final_project.firedate.R;
+import com.android_final_project.firedate.activities.Activity_Swipe;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 public class UserOperator {
@@ -22,7 +28,7 @@ public class UserOperator {
 //            .put(SexualGroup.Male_Male,new ArrayList<SexualGroup>(SexualGroup.Male_Male,))
 
     AppCompatActivity activity;
-    UserOperatorCallback userOpCallback;
+    static UserOperatorCallback userOpCallback;
 
     public UserOperator(AppCompatActivity activity, UserOperatorCallback callback){
         this.activity = activity;
@@ -53,6 +59,7 @@ public class UserOperator {
         }
     }
 
+    @Deprecated
     public void signup(String email, String pass1, String pass2, String name, String description, SexualGroup group){
         if(email==null || email.isEmpty()){
             userOpCallback.operationFailed(activity.getString(R.string.empty_email));
@@ -83,16 +90,54 @@ public class UserOperator {
         }
     }
 
+    public void signup(String email, String pass1, String pass2, String name, Long usersAgeInMillis, String description, Uri profileImgPath, SexualGroup group) {
+        if(email==null || email.isEmpty()){
+            userOpCallback.operationFailed(activity.getString(R.string.empty_email));
+        }
+        else if(pass1==null || pass2==null || pass1.isEmpty() || pass2.isEmpty()) {
+            userOpCallback.operationFailed(activity.getString(R.string.empty_pass));
+        }
+        else if(pass1.compareTo(pass2)!=0){
+            userOpCallback.operationFailed(activity.getString(R.string.signup_passworddidntmatch));
+        }
+        else if(name==null || name.isEmpty()) {
+            userOpCallback.operationFailed(activity.getString(R.string.signup_empty_name));
+        }
+        else if(usersAgeInMillis==null) {
+            userOpCallback.operationFailed(activity.getString(R.string.signup_empty_age));
+        }
+        else if(profileImgPath==null) {
+            userOpCallback.operationFailed(activity.getString(R.string.signup_empty_img));
+        }
+        else{
+            AuthSingleton.getMe().createUserWithEmailAndPassword(email, pass1).addOnCompleteListener(activity,
+                    task -> { //sign up failed
+                        if (!task.isSuccessful()) { // if email is taken, or password is too short
+                            task.addOnFailureListener(exception -> userOpCallback.operationFailed(exception.getMessage()));
+                        }
+                        else{ //sign up succeeded
+                            String userId = AuthSingleton.getMe().getCurrentUser().getUid();
+                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null, usersAgeInMillis); //TODO add image
+                            addUserToDB(userEntity, group);
+                            saveImgInStorage(userId, group, profileImgPath, imgUrl -> {
+                                userEntity.setProfileImageUrl(imgUrl);
+                                addUserToDB(userEntity, group);
+                                userOpCallback.operationSucceeded();
+                            });
+                        }
+                    });
+        }
+    }
+
     private void addUserToDB(UserEntity userEntity, SexualGroup group){
         DatabaseReference db = FirebaseDatabase.getInstance().getReference();
         DatabaseReference user = db.child("Users")
                 .child(group.toString())
                 .child(userEntity.getUserId());
-
         user.child("name").setValue(userEntity.getName());
         user.child("description").setValue(userEntity.getDescription());
+        user.child("usersAgeInMillis").setValue(userEntity.getUsersAgeInMillis());
         user.child("profileImgUrl").setValue(userEntity.getProfileImageUrl());
-
 
         db.child("UsersGroup")
                 .child(userEntity.getUserId())
@@ -122,6 +167,36 @@ public class UserOperator {
                 .child(userId);
 
         user.updateChildren(userInfo);
+
+        if(userOpCallback != null){
+            userOpCallback.operationSucceeded();
+        }
+    }
+
+    private interface ImageUploaded{
+        void uploadSucceeded(String imgUrl);
+    }
+    private void saveImgInStorage(String userId, SexualGroup group, Uri profileImgPath, ImageUploaded iu){
+        // save image
+        if (profileImgPath != null){
+            StorageReference ref = FirebaseStorage
+                    .getInstance()
+                    .getReference()
+                    .child("profileImages")
+                    .child(userId);
+
+            StorageReference dateRef = ref.child("mainPhoto");
+            dateRef
+                    .putFile(profileImgPath)
+                    .addOnSuccessListener(taskSnapshot -> {
+                dateRef.getDownloadUrl().addOnSuccessListener(downloadPhotoUrl -> {
+                    Map userInfo = new HashMap();
+                    userInfo.put("profileImageUrl", downloadPhotoUrl.toString());
+                    UserOperator.updateUserInDB(userId, group, userInfo);
+                    iu.uploadSucceeded(downloadPhotoUrl.toString());
+                });
+            });
+        }
     }
 
     public interface UserDataCallback{
