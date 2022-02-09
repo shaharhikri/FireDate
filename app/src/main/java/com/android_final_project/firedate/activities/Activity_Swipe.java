@@ -315,6 +315,7 @@ public class Activity_Swipe extends AppCompatActivity {
                                 );
                         // TODO: check if show this person to User(duplicate)
                         if(!otherUser.getUserId().equals(currentUserId)
+                                && !cardList.contains(otherUser) // TODO check by ref
                                 && !userSnapshot.child("swipes").child("left").hasChild(currentUserId)
                                 && !userSnapshot.child("swipes").child("right").hasChild(currentUserId)
                         ){

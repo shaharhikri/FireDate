@@ -6,17 +6,15 @@ public class ChatListEntity {
     private String userSexualGroup;
     private String name;
     private String ProfileImageUrl;
-    private String time;
 
     public ChatListEntity() { }
 
-    public ChatListEntity(String chatId, String userId, String userSexualGroup, String name, String profileImageUrl, String time) {
+    public ChatListEntity(String chatId, String userId, String userSexualGroup, String name, String profileImageUrl) {
         this.chatId = chatId;
         this.userId = userId;
         this.userSexualGroup = userSexualGroup;
         this.name = name;
         ProfileImageUrl = profileImageUrl;
-        this.time = time;
     }
 
     public String getChatId() {
@@ -61,15 +59,6 @@ public class ChatListEntity {
 
     public ChatListEntity setProfileImageUrl(String profileImageUrl) {
         ProfileImageUrl = profileImageUrl;
-        return this;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public ChatListEntity setTime(String time) {
-        this.time = time;
         return this;
     }
 }

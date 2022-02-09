@@ -3,6 +3,7 @@ package com.android_final_project.firedate.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,11 +51,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolde
             holder.chat_TXT_message     .setTextColor(Color.parseColor("#404040"));
             holder.chat_LL_container    .setGravity(Gravity.END);
             holder.chat_LL_container    .setBackgroundColor(Color.parseColor("#F4F4F4"));
+            holder.chat_LL_container    .setBackground(context.getDrawable(R.drawable.chat_shape_user));
         } else {
             holder.chat_TXT_message     .setGravity(Gravity.START);
             holder.chat_TXT_message     .setTextColor(Color.parseColor("#FFFFFF"));
             holder.chat_LL_container    .setGravity(Gravity.START);
-            holder.chat_LL_container    .setBackgroundColor(Color.parseColor("#2DB4C8"));
+            holder.chat_LL_container    .setBackground(context.getDrawable(R.drawable.chat_shape_other));
         }
 
     }
