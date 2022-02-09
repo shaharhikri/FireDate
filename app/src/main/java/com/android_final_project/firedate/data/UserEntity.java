@@ -1,5 +1,7 @@
 package com.android_final_project.firedate.data;
 
+import java.util.Objects;
+
 public class UserEntity {
     private String userId;
     private String name;
@@ -50,5 +52,18 @@ public class UserEntity {
     public UserEntity setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return userId.equals(that.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return userId.hashCode();
     }
 }

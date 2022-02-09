@@ -21,7 +21,6 @@ public class Activity_Splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         AuthSingleton.setAuthCallback(new AuthSingleton.DefaultAuthCallback(this));
-        Log.d("pttt", "Activity_Splash onCreate");
     }
 
 }

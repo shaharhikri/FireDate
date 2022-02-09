@@ -58,6 +58,7 @@ public class Activity_Swipe extends AppCompatActivity {
     private UserOperator.SexualGroup currentUserSexualGroup;
     private DatabaseReference usersDb;
     private int cardsPerPage = 20;
+    private String lastOtherUserID;
     private boolean isLoading = false;
 
 //    private ArrayList<UserOperator.SexualGroup> userPreferenceGroups;
@@ -173,7 +174,8 @@ public class Activity_Swipe extends AppCompatActivity {
                     @Override
                     public void removeFirstObjectInAdapter() {
                         // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                        Log.d("LIST", "removed object!");
+                        Log.d("pttt", "removed user: " + cardList.get(0).getUserId());
+                        lastOtherUserID = cardList.get(0).getUserId();
                         cardList.remove(0);
                         arrayAdapter.notifyDataSetChanged();
                     }
@@ -315,10 +317,12 @@ public class Activity_Swipe extends AppCompatActivity {
                                 );
                         // TODO: check if show this person to User(duplicate)
                         if(!otherUser.getUserId().equals(currentUserId)
-                                && !cardList.contains(otherUser) // TODO check by ref
                                 && !userSnapshot.child("swipes").child("left").hasChild(currentUserId)
                                 && !userSnapshot.child("swipes").child("right").hasChild(currentUserId)
+                                && !otherUser.getUserId().equals(lastOtherUserID)
+                                && !cardList.contains(otherUser) // TODO check by ref
                         ){
+                            Log.d("pttt", "add user: " + otherUser.getUserId());
                             cardList.add(otherUser);
                         }
 
