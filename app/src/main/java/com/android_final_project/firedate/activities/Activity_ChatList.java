@@ -95,7 +95,7 @@ public class Activity_ChatList extends AppCompatActivity {
                     if (snapshot.exists()){
                         String userID = snapshot.getKey();
 
-                        String chatId = getValue(snapshot, "ChatId");
+                        String chatId = getValue(snapshot.child("swipes").child("matches").child(currentUserId), "ChatId");
                         String name = getValue(snapshot, "name");
                         String profileImageUrl = getValue(snapshot, "profileImageUrl");
 

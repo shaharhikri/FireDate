@@ -1,18 +1,25 @@
 package com.android_final_project.firedate.activities;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 
 import com.android_final_project.firedate.R;
@@ -20,6 +27,7 @@ import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.Adapters.UserArrayAdapter;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
+import com.android_final_project.firedate.utils.NotificationBackgroundProcess;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,7 +36,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.lorentzos.flingswipe.FlingCardListener;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -84,8 +91,58 @@ public class Activity_Swipe extends AppCompatActivity {
 
         initValues();
 
+        handleNotifications();
+
 
         // TODO finish freeze
+    }
+
+    private void handleNotifications() {
+        Intent intent = new Intent(this, NotificationBackgroundProcess.class);
+        intent.setAction("BackgroundProcess");
+
+
+        Bundle notificationsBundle = new Bundle();
+        notificationsBundle.putString("test", "test1");
+        intent.putExtra("bundle", notificationsBundle);
+        //Set the repeated Task
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, 10, pendingIntent);
+
+        //TODO on other process
+        createNotificationChannel();
+        Log.d("pttt", "handleNotifications: notice");
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "fire")
+                .setSmallIcon(R.drawable.app_icon)
+                .setContentTitle("My notification")
+                .setContentText("Much longer text that cannot fit one line...")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText("Much longer text that cannot fit one line..."))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+        notificationManager.notify(100, builder.build());
+
+
+
+//        finish();
+    }
+
+    private void createNotificationChannel() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "studentChannel";
+            String description = "Channel for student notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("fire", name, importance);
+            channel.setDescription(description);
+
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void loadingAnimationStart() {
@@ -202,7 +259,7 @@ public class Activity_Swipe extends AppCompatActivity {
                     @Override
                     public void removeFirstObjectInAdapter() {
                         // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                        Log.d("pttt", "removed user: " + cardList.get(0).getUserId());
+//                        Log.d("pttt", "removed user: " + cardList.get(0).getUserId());
                         lastOtherUserID = cardList.get(0).getUserId();
                         cardList.remove(0);
                         arrayAdapter.notifyDataSetChanged();
@@ -221,6 +278,7 @@ public class Activity_Swipe extends AppCompatActivity {
                     public void onRightCardExit(Object dataObject) {
                         UserEntity obj = (UserEntity) dataObject;
                         handleSwipe(obj, "right");
+
 //                        swipe_TXT_print.setText(obj.getName() + " Right!");
                     }
 
@@ -276,7 +334,9 @@ public class Activity_Swipe extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    String chatKey = FirebaseDatabase.getInstance().getReference().child("Chat").push().getKey();
+                    DatabaseReference chatsDbRef = FirebaseDatabase.getInstance().getReference().child("Chats");
+                    String chatKey = chatsDbRef.push().getKey();
+                    chatsDbRef.child(chatKey).setValue(true);
 
                     usersDb
                             .child(sexualPreferenceGroups.toString())
@@ -294,6 +354,9 @@ public class Activity_Swipe extends AppCompatActivity {
                             .child(otherUser.getUserId())
                             .child("ChatId")
                             .setValue(chatKey);
+
+
+
                     Toast.makeText(Activity_Swipe.this, "Match!", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -356,7 +419,7 @@ public class Activity_Swipe extends AppCompatActivity {
                                 && !otherUser.getUserId().equals(lastOtherUserID)
                                 && !cardList.contains(otherUser)
                         ){
-                            Log.d("pttt", "add user: " + otherUser.getUserId());
+//                            Log.d("pttt", "add user: " + otherUser.getUserId());
                             cardList.add(otherUser);
                         }
 

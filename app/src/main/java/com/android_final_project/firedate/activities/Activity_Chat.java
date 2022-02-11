@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -59,7 +60,7 @@ public class Activity_Chat extends AppCompatActivity {
         initBundle();
 
         chatDb = FirebaseDatabase.getInstance().getReference().child("Chats").child(chatId);
-
+        Log.d("pttt", "chatListAdpter ChatID: " + chatId);
 
 //        Toast.makeText(this, otherUserId + " : "+ otherUserSexualGroup, Toast.LENGTH_SHORT).show();
         findViews();
@@ -85,8 +86,6 @@ public class Activity_Chat extends AppCompatActivity {
                     if (createdBy.equals(currentUserId)){
                         currentUserMsg = true;
                     }
-
-
 
                     ChatEntity entity = new ChatEntity(msg, currentUserMsg);
                     dataSetChats.add(entity);
@@ -151,7 +150,7 @@ public class Activity_Chat extends AppCompatActivity {
     }
 
     private void sendMessage(String msg) {
-        DatabaseReference msgRef = chatDb.push();
+        DatabaseReference msgRef = chatDb.child(chatDb.push().getKey());
 
         Map newMsg = new HashMap();
 

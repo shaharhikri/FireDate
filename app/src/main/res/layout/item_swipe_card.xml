@@ -13,7 +13,7 @@
     android:clipToPadding="false">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/card_CARD_cardview"
+        android:id="@+id/card_CARD_cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
