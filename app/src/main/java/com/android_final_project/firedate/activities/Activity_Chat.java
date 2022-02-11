@@ -21,11 +21,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TimeZone;
 
 public class Activity_Chat extends AppCompatActivity {
 
@@ -80,6 +84,7 @@ public class Activity_Chat extends AppCompatActivity {
                 }
                 String msg = getValue(snapshot, "text");
                 String createdBy = getValue(snapshot, "CreateBy");
+                Date time = snapshot.child("time").getValue(Date.class);
 
                 if (msg != null && createdBy != null){
                     boolean currentUserMsg = false;
@@ -87,7 +92,7 @@ public class Activity_Chat extends AppCompatActivity {
                         currentUserMsg = true;
                     }
 
-                    ChatEntity entity = new ChatEntity(msg, currentUserMsg);
+                    ChatEntity entity = new ChatEntity(msg, currentUserMsg, time);
                     dataSetChats.add(entity);
                     adapter.notifyDataSetChanged();
 
@@ -156,6 +161,7 @@ public class Activity_Chat extends AppCompatActivity {
 
         newMsg.put("CreateBy", currentUserId);
         newMsg.put("text", msg);
+        newMsg.put("time", Calendar.getInstance().getTime());
 
         msgRef.setValue(newMsg);
     }

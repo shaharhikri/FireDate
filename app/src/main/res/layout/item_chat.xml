@@ -8,6 +8,7 @@
         android:id="@+id/chat_LL_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_marginBottom="30dp"
         android:layout_marginHorizontal="5dp"
         android:background="@drawable/chat_shape_user"
@@ -15,10 +16,19 @@
 
         <TextView
             android:id="@+id/chat_TXT_message"
+            android:paddingBottom="30sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Text"/>
+
+        <TextView
+            android:id="@+id/chat_TXT_date"
             android:paddingBottom="20sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Text"/>
+            android:layout_gravity="end|bottom"
+            android:text="date"/>
 
     </LinearLayout>
 

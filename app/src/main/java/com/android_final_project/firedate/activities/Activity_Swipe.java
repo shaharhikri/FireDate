@@ -93,8 +93,6 @@ public class Activity_Swipe extends AppCompatActivity {
 
         handleNotifications();
 
-
-        // TODO finish freeze
     }
 
     private void handleNotifications() {
@@ -110,40 +108,8 @@ public class Activity_Swipe extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, 10, pendingIntent);
 
-        //TODO on other process
-        createNotificationChannel();
-        Log.d("pttt", "handleNotifications: notice");
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "fire")
-                .setSmallIcon(R.drawable.app_icon)
-                .setContentTitle("My notification")
-                .setContentText("Much longer text that cannot fit one line...")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Much longer text that cannot fit one line..."))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-        notificationManager.notify(100, builder.build());
-
-
-
-//        finish();
     }
 
-    private void createNotificationChannel() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "studentChannel";
-            String description = "Channel for student notifications";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("fire", name, importance);
-            channel.setDescription(description);
-
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
 
     private void loadingAnimationStart() {
         swipe_LL_loading.setVisibility(View.VISIBLE);

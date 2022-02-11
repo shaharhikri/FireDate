@@ -20,7 +20,9 @@ import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.activities.Activity_Chat;
 import com.android_final_project.firedate.data.ChatEntity;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolders> {
 
@@ -46,9 +48,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolde
     public void onBindViewHolder(@NonNull ChatsViewHolders holder, int position) {
         ChatEntity currentChat = chatEntities.get(position);
         holder.chat_TXT_message.setText(currentChat.getMessage());
+        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+
+
+        df.setTimeZone(TimeZone.getDefault());
+        String formattedDate = df.format(currentChat.getTime());
+
+
+        holder.chat_TXT_date.setText(formattedDate);
         if(currentChat.isCurrentUser()){
             holder.chat_TXT_message     .setGravity(Gravity.END);
-            holder.chat_TXT_message     .setTextColor(Color.parseColor("#404040"));
+            holder.chat_TXT_message     .setTextColor(Color.parseColor("#FFFFFF"));
             holder.chat_LL_container    .setGravity(Gravity.END);
             holder.chat_LL_container    .setBackgroundColor(Color.parseColor("#F4F4F4"));
             holder.chat_LL_container    .setBackground(context.getDrawable(R.drawable.chat_shape_user));
@@ -70,6 +81,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolde
 
         private LinearLayout    chat_LL_container;
         private TextView        chat_TXT_message;
+        private TextView        chat_TXT_date;
 
 
 
@@ -86,6 +98,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolde
         private void findViews(View itemView) {
             chat_LL_container = itemView.findViewById(R.id.chat_LL_container);
             chat_TXT_message = itemView.findViewById(R.id.chat_TXT_message);
+            chat_TXT_date = itemView.findViewById(R.id.chat_TXT_date);
         }
 
         @Override
