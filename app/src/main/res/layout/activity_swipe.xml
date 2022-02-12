@@ -149,4 +149,44 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/swipe_layout_match"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#A3020202"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:context=".activities.Activity_Splash">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/swipe_IMG_match"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:src="@drawable/img_match"
+            android:layout_marginTop="150dp"/>
+
+        <View
+            android:layout_height="110dp"
+            android:layout_width="0dp"></View>
+
+        <TextView
+            android:id="@+id/swipe_tv_match"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:text="match_text"
+            android:textSize="30dp"
+            android:textColor="#91A18C"
+            ></TextView>
+
+        <Button
+            android:id="@+id/swipe_btn_match"
+            android:layout_width="240dp"
+            android:layout_height="50dp"
+            android:text="Continue Swiping"
+            android:visibility="invisible"
+            ></Button>
+
+    </LinearLayout>
+
 </RelativeLayout>
