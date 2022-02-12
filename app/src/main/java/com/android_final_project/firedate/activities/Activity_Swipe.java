@@ -22,6 +22,7 @@ import com.android_final_project.firedate.Adapters.UserArrayAdapter;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
 import com.android_final_project.firedate.utils.GPS;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +35,7 @@ import com.google.gson.Gson;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Activity_Swipe extends AppCompatActivity {
@@ -129,7 +131,7 @@ public class Activity_Swipe extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
         gps = GPS.getMe();
-
+        currentLocation = gps.getLastKnownLocation();
 
         initUserOperator();
         currentUserId = AuthSingleton.getMe().getCurrentUser().getUid();
@@ -185,7 +187,6 @@ public class Activity_Swipe extends AppCompatActivity {
 
         Log.d("pttt", "handleGPS: enter");
 
-        currentLocation = null;
         gpsThread = new Thread(gpsRunnable);
         gpsThread.start();
     }
@@ -340,7 +341,7 @@ public class Activity_Swipe extends AppCompatActivity {
             UserEntity tmp = (UserEntity) dataObject;
             bundle.putString(getString(R.string.key_otherUserData), new Gson().toJson(tmp));
             bundle.putString(getString(R.string.key_location) , new Gson().toJson(currentLocation));
-            bundle.putFloat(getString(R.string.key_distance), currentLocation.distanceTo(tmp.getLocation()) / 100_000);
+            bundle.putFloat(getString(R.string.key_distance), currentLocation.distanceTo(tmp.getLocation())/1000);
             changeActivity(Activity_UserDetails.class);
         });
     }
@@ -462,7 +463,18 @@ public class Activity_Swipe extends AppCompatActivity {
 
                     String locationJSON = userSnapshot.child("location").exists() ?
                             userSnapshot.child("location").getValue().toString(): null;
-                    Location location = new Gson().fromJson(locationJSON, Location.class);
+
+                    HashMap<String,Object> locMap = new Gson().fromJson(locationJSON, HashMap.class);
+
+//                    Log.d("ptttd", "getUserFromDB1: "+locMap.get("longitude"));
+//                    Log.d("ptttd", "getUserFromDB2: "+locMap.get("latitude"));
+
+                    Location location = new Location(LocationServices.getFusedLocationProviderClient(Activity_Swipe.this).toString());
+                    location.setLongitude((Double)locMap.get("longitude"));
+                    location.setLatitude((Double)locMap.get("latitude"));
+
+                    //Log.d("ptttd", "getUserFromDB: "+location.getLatitude()+ " " + location.getLongitude());
+
 
                     return new UserEntity(userID, name, description, profileImageUrl, usersAgeInMillis, location, searchDistance);
                 }
@@ -490,17 +502,9 @@ public class Activity_Swipe extends AppCompatActivity {
         if (cardList.contains(otherUser)){
             flag = false;
         }
-//        if (!userSnapshot.child("location").exists()){
-//            flag = false;
-//        } else {
-//            Location otherUserLocation = userSnapshot.child("location").getValue(Location.class);
-//            if (otherUserLocation != null) {
-//                if (gps.calculateDistance(currentLocation, otherUserLocation) <= userSearchingDistance) {
-//                    flag = false;
-//                }
-//            }
-//        }
-
+        if(otherUser.getLocation().distanceTo(currentLocation)/1000 > (float)userSearchingDistance) {
+            flag = false;
+        }
         return flag;
     }
 
