@@ -16,15 +16,16 @@
 
         <TextView
             android:id="@+id/chat_TXT_message"
-            android:paddingBottom="30sp"
+            android:paddingBottom="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
+            android:textSize="24sp"
             android:text="Text"/>
 
         <TextView
             android:id="@+id/chat_TXT_date"
-            android:paddingBottom="20sp"
+            android:paddingBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"

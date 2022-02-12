@@ -1,7 +1,9 @@
 <shape
     xmlns:android="http://schemas.android.com/apk/res/android">
   <solid
-      android:color="@color/button_light">
+      android:color="@color/button_light"
+      android:layout_marginStart="10dp"
+      >
   </solid>
   <stroke
       android:width="0dp"

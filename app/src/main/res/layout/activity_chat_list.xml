@@ -5,10 +5,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#eef4f6"
+    android:orientation="vertical"
     tools:context=".activities.Activity_ChatList">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Matches"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:gravity="center" />
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chatList_RCV_recyclerView"
             android:layout_width="match_parent"

@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/myStatusBar"
     app:cardCornerRadius="20dp"
     android:elevation="8dp"
     app:cardElevation="8dp"
-    android:layout_margin="10dp"
     tools:context=".activities.Activity_UserDetails">
 
     <androidx.appcompat.widget.AppCompatButton
@@ -19,7 +19,12 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="@string/back" />
+        android:text="@string/back"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:backgroundTint="@color/button_dark"
+        app:cornerRadius="8dp"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -42,6 +47,7 @@
                     android:layout_height="450dp"
                     android:scaleType="centerCrop"
                     android:layout_marginHorizontal="8dp"
+                    app:cornerRadius="20dp"
                     android:src="@drawable/ic_launcher_background" />
 
                 <com.google.android.material.textview.MaterialTextView

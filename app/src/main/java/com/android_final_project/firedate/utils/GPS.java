@@ -47,7 +47,12 @@ public class GPS {
         if (checkPermission()) {
             return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
-        return null;
+        else{
+            Location location = new Location(LocationServices.getFusedLocationProviderClient(context).toString());
+            location.setLatitude(0.0);
+            location.setLongitude(0.0);
+            return location;
+        }
     }
 
     public void getLocation(CallBack_GPS cb){
@@ -69,7 +74,10 @@ public class GPS {
             });
         }
         else {
-            cb.getLocation(null);
+            Location location = new Location(LocationServices.getFusedLocationProviderClient(context).toString());
+            location.setLatitude(0.0);
+            location.setLongitude(0.0);
+            cb.getLocation(location);
         }
     }
 
@@ -89,14 +97,8 @@ public class GPS {
     }
 
     public int calculateDistance(Location l1, Location l2) {
-        if (l1 == null){
-            Log.d("pttt", "calculateDistance: l1 is null");
-        }
-        if (l2 == null){
-            Log.d("pttt", "calculateDistance: l2 is null");
-        }
         if (l1 == null || l2 == null){
-            return 300;
+            return Integer.MAX_VALUE;
         }
         return calculateDistance(l1.getLatitude(), l1.getLongitude(), l2.getLatitude(), l2.getLongitude());
     }

@@ -94,7 +94,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
             Bundle bundle = new Bundle();
 
             bundle.putString(context.getString(R.string.key_chat_id), chatID);
-            Log.d("pttt", "chatListAdpter ChatID: " + chatID);
             bundle.putString(context.getString(R.string.key_currentUserId), AuthSingleton.getMe().getUid());
 
             bundle.putString(context.getString(R.string.key_other_user_id), otherUserID);

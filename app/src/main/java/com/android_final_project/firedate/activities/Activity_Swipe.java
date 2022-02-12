@@ -112,7 +112,7 @@ public class Activity_Swipe extends AppCompatActivity {
             if(userEntity == null || userEntity.getProfileImageUrl() == null) {
                 UserOperator.getUserData(currentUserId, currentUserSexualGroup, userData -> {
                     userEntity = userData;
-                });
+                } , Activity_Swipe.this);
                 waitForImageHandler.postDelayed(waitForImageHandler_run, 50);
             }
             else{
@@ -150,8 +150,6 @@ public class Activity_Swipe extends AppCompatActivity {
                 .child(currentUserId)
                 .child("location");
 
-        Log.d("pttt", "endOnCreate: Searching dis: " + userSearchingDistance);
-
         startGpsSampling();
         swipe_LL_loading.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         loadingAnimationEnd();
@@ -160,7 +158,6 @@ public class Activity_Swipe extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("pttt", "onResume: " + gpsThread);
         startGpsSampling();
     }
 
@@ -185,8 +182,6 @@ public class Activity_Swipe extends AppCompatActivity {
         if((gpsThread!=null && gpsThread.isAlive()) || locationRef == null)
             return;
 
-        Log.d("pttt", "handleGPS: enter");
-
         gpsThread = new Thread(gpsRunnable);
         gpsThread.start();
     }
@@ -199,7 +194,6 @@ public class Activity_Swipe extends AppCompatActivity {
 
     private void loadingAnimationStart() {
         swipe_LL_loading.setVisibility(View.VISIBLE);
-        Log.d("ptttb", "loadingAnimationStart: ");
     }
 
     private void loadingAnimationEnd() {
@@ -207,10 +201,9 @@ public class Activity_Swipe extends AppCompatActivity {
     }
 
     private void initValues() {
+        loadingAnimationStart();
         bundle = getIntent().getBundleExtra(getString(R.string.key_bundle));
         if (bundle == null) {
-            Log.d("pttt", "initValues: ");
-            loadingAnimationStart();
             bundle = new Bundle();
             UserOperator.getUserGroup(currentUserId, sexualPreferenceGroups -> {
                 currentUserSexualGroup = sexualPreferenceGroups;
@@ -466,15 +459,10 @@ public class Activity_Swipe extends AppCompatActivity {
 
                     HashMap<String,Object> locMap = new Gson().fromJson(locationJSON, HashMap.class);
 
-//                    Log.d("ptttd", "getUserFromDB1: "+locMap.get("longitude"));
-//                    Log.d("ptttd", "getUserFromDB2: "+locMap.get("latitude"));
-
                     Location location = new Location(LocationServices.getFusedLocationProviderClient(Activity_Swipe.this).toString());
+
                     location.setLongitude((Double)locMap.get("longitude"));
                     location.setLatitude((Double)locMap.get("latitude"));
-
-                    //Log.d("ptttd", "getUserFromDB: "+location.getLatitude()+ " " + location.getLongitude());
-
 
                     return new UserEntity(userID, name, description, profileImageUrl, usersAgeInMillis, location, searchDistance);
                 }

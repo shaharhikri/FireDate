@@ -1,10 +1,13 @@
 package com.android_final_project.firedate.data;
 
+import android.content.Context;
 import android.location.Location;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android_final_project.firedate.R;
+import com.android_final_project.firedate.activities.Activity_Swipe;
+import com.google.android.gms.location.LocationServices;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -170,7 +173,8 @@ public class UserOperator {
     public interface UserDataCallback{
         void UserData(UserEntity userEntity);
     }
-    public static void getUserData(String userId, SexualGroup group, UserDataCallback callback){
+
+    public static void getUserData(String userId, SexualGroup group, UserDataCallback callback, Context context){
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("Users").child(group.toString()).child(userId);
         UserEntity userEntity = new UserEntity().setUserId(userId);
@@ -182,8 +186,20 @@ public class UserOperator {
                 userEntity.setProfileImageUrl(snapshot.child("profileImageUrl").getValue(String.class));
                 userEntity.setUsersAgeInMillis(snapshot.child("usersAgeInMillis").getValue(Long.class));
 
-                String locationJSON = snapshot.child("location").getValue().toString();
-                Location location = new Gson().fromJson(locationJSON, Location.class);
+                String locationJSON = snapshot.child("location").exists() ?
+                        snapshot.child("location").getValue().toString(): null;
+
+                HashMap<String,Object> locMap = new Gson().fromJson(locationJSON, HashMap.class);
+
+                Location location = new Location(LocationServices.getFusedLocationProviderClient(context).toString());
+                try {
+                    location.setLongitude((Double) locMap.get("longitude"));
+                    location.setLatitude((Double) locMap.get("latitude"));
+                }
+                catch(java.lang.NullPointerException e){
+                    location.setLongitude(0);
+                    location.setLatitude(0);
+                }
                 userEntity.setLocation(location);
                 userEntity.setSearchDistance(snapshot.child("searchingDistance").getValue(Integer.class));
 

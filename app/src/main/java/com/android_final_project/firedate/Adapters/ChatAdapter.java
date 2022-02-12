@@ -49,19 +49,30 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ChatsViewHolde
 
 
         holder.chat_TXT_date.setText(formattedDate);
+
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+
         if(currentChat.isCurrentUser()){
             holder.chat_TXT_message     .setGravity(Gravity.END);
             holder.chat_TXT_message     .setTextColor(Color.parseColor("#FFFFFF"));
             holder.chat_LL_container    .setGravity(Gravity.END);
+            holder.chat_LL_container    .setGravity(Gravity.END);
             holder.chat_LL_container    .setBackgroundColor(Color.parseColor("#F4F4F4"));
             holder.chat_LL_container    .setBackground(context.getDrawable(R.drawable.chat_shape_user));
+            params.setMargins(100, 20, 10, 0);
         } else {
             holder.chat_TXT_message     .setGravity(Gravity.START);
             holder.chat_TXT_message     .setTextColor(Color.parseColor("#FFFFFF"));
             holder.chat_LL_container    .setGravity(Gravity.START);
             holder.chat_LL_container    .setBackground(context.getDrawable(R.drawable.chat_shape_other));
+            params.setMargins(10, 20, 100, 0);
         }
-
+        holder.chat_LL_container    .setLayoutParams(params);
     }
 
     @Override
