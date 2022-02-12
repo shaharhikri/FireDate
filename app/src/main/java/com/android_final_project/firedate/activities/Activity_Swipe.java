@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -108,6 +109,27 @@ public class Activity_Swipe extends AppCompatActivity {
     private final static long ANIM_DURATION = 3000l;
     private Button swipe_btn_match;
 
+    private final Handler waitForImageHandler = new Handler();
+
+    private final Runnable waitForImageHandler_run = new Runnable() {
+        @Override
+        public void run() {
+            if(userEntity == null || userEntity.getProfileImageUrl() == null) {
+                UserOperator.getUserData(currentUserId, currentUserSexualGroup, userData -> {
+                    userEntity = userData;
+                });
+                waitForImageHandler.postDelayed(waitForImageHandler_run, 50);
+            }
+            else{
+                bundle.putString(getString(R.string.key_currentUserId), currentUserId);
+                bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
+                bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
+                bundle.putInt(getString(R.string.key_currentUserSearchingDistance), userSearchingDistance);
+                endOnCreate();
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +163,7 @@ public class Activity_Swipe extends AppCompatActivity {
         Log.d("pttt", "endOnCreate: Searching dis: " + userSearchingDistance);
 
         startGpsSampling();
+        swipe_LL_loading.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         loadingAnimationEnd();
     }
 
@@ -205,16 +228,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
     private void loadingAnimationStart() {
         swipe_LL_loading.setVisibility(View.VISIBLE);
-    }
-
-    private void loadingAnimationStart(boolean background) {
-        if (background){
-            swipe_LL_loading.setBackgroundColor(Color.parseColor("#AAFFFFFF"));
-        } else {
-            swipe_LL_loading.setBackgroundColor(Color.parseColor("#00FFFFFF"));
-        }
-
-        loadingAnimationStart();
+        Log.d("ptttb", "loadingAnimationStart: ");
     }
 
     private void loadingAnimationEnd() {
@@ -222,22 +236,25 @@ public class Activity_Swipe extends AppCompatActivity {
     }
 
     private void initValues() {
-        loadingAnimationStart();
         bundle = getIntent().getBundleExtra(getString(R.string.key_bundle));
         if (bundle == null) {
+            Log.d("pttt", "initValues: ");
+            loadingAnimationStart();
             bundle = new Bundle();
             UserOperator.getUserGroup(currentUserId, sexualPreferenceGroups -> {
                 currentUserSexualGroup = sexualPreferenceGroups;
                 initFlingContainer(sexualPreferenceGroups.getPreferenceGroups());
 
-                UserOperator.getUserData(currentUserId, currentUserSexualGroup, userData -> {
-                    userEntity = userData;
-                    bundle.putString(getString(R.string.key_currentUserId), currentUserId);
-                    bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
-                    bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
-                    bundle.putInt(getString(R.string.key_currentUserSearchingDistance), userSearchingDistance);
-                    endOnCreate();
-                });
+                waitForImageHandler_run.run();
+
+//                UserOperator.getUserData(currentUserId, currentUserSexualGroup, userData -> {
+//                    userEntity = userData;
+//                    bundle.putString(getString(R.string.key_currentUserId), currentUserId);
+//                    bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
+//                    bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
+//                    bundle.putInt(getString(R.string.key_currentUserSearchingDistance), userSearchingDistance);
+//                    endOnCreate();
+//                });
             });
         } else {
             String currentUserSexualGroupStr = bundle.getString(getString(R.string.key_currentUserSexualGroup));
@@ -353,14 +370,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
                     @Override
                     public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                        // Ask for more data here
                         getUsers(userPreferenceGroups, cardsId);
-                        if(cardList.size() == 0){
-                            loadingAnimationStart(false);
-                        } else {
-                            loadingAnimationEnd();
-                        }
-
                     }
 
                     @Override
