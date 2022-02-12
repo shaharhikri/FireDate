@@ -109,8 +109,22 @@ public class Activity_Swipe extends AppCompatActivity {
     private final static long ANIM_DURATION = 3000l;
     private Button swipe_btn_match;
 
-    private final Handler waitForImageHandler = new Handler();
+    Runnable onBackPressed_swiping = () -> {
+        Log.d("ptttc", "onBackPressed_swiping");
+        super.onBackPressed();
+        finish();
+        System.exit(0);
+    };
+    Runnable onBackPressed_run = onBackPressed_swiping;
+    Runnable onBackPressed_match = () -> {
+        Log.d("ptttc", "onBackPressed_match");
+        swipe_btn_match.setVisibility(View.INVISIBLE);
+        swipe_btn_match.setOnClickListener( view2 -> { });
+        swipe_layout_match.setVisibility(View.GONE);
+        onBackPressed_run = onBackPressed_swiping;
+    };
 
+    private final Handler waitForImageHandler = new Handler();
     private final Runnable waitForImageHandler_run = new Runnable() {
         @Override
         public void run() {
@@ -182,9 +196,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-        System.exit(0);
+        onBackPressed_run.run();
     }
 
     @Override
@@ -563,8 +575,10 @@ public class Activity_Swipe extends AppCompatActivity {
     }
 
     public void matchAnimation(String matchName){
+        onBackPressed_run = onBackPressed_match;
         swipe_layout_match.setVisibility(View.VISIBLE);
         swipe_tv_match.setText("You have match with "+matchName);
+
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -583,12 +597,8 @@ public class Activity_Swipe extends AppCompatActivity {
                     public void onAnimationEnd(Animator animation) {
                         swipe_btn_match.setVisibility(View.VISIBLE);
                         swipe_btn_match.setOnClickListener( view -> {
-                            swipe_btn_match.setVisibility(View.INVISIBLE);
-                            swipe_btn_match.setOnClickListener( view2 -> { });
-                            swipe_layout_match.setVisibility(View.GONE);
+                            onBackPressed_match.run();
                         });
-
-
                     }
 
                     @Override
