@@ -11,11 +11,6 @@ public class ChatEntity {
 
     public ChatEntity() { }
 
-//    public ChatEntity(String message, boolean currentUser) {
-//        this.message = message;
-//        this.currentUser = currentUser;
-//    }
-
     public ChatEntity(String message, boolean currentUser, Date time) {
         this.message = message;
         this.currentUser = currentUser;

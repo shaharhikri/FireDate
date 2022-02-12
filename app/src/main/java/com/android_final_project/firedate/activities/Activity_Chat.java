@@ -7,10 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
-import android.widget.Toast;
-
 import com.android_final_project.firedate.Adapters.ChatAdapter;
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.ChatEntity;
@@ -20,16 +17,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.TimeZone;
 
 public class Activity_Chat extends AppCompatActivity {
 
@@ -64,9 +57,7 @@ public class Activity_Chat extends AppCompatActivity {
         initBundle();
 
         chatDb = FirebaseDatabase.getInstance().getReference().child("Chats").child(chatId);
-        Log.d("pttt", "chatListAdpter ChatID: " + chatId);
 
-//        Toast.makeText(this, otherUserId + " : "+ otherUserSexualGroup, Toast.LENGTH_SHORT).show();
         findViews();
         initViews();
 

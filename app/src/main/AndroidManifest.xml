@@ -50,14 +50,6 @@
             android:name=".activities.Activity_Swipe"
             android:exported="false" />
 
-        <receiver
-            android:name=".utils.NotificationBackgroundProcess"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="BackgroundProcess" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
-
 import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.UserOperator;
 
@@ -21,7 +20,6 @@ public class Activity_Splash extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
         findViews();
         showAnimation(1.0F, 1.0F, 0.8f, 0.8f,300, 7);
     }

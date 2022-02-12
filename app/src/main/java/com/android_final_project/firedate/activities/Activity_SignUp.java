@@ -3,13 +3,11 @@ package com.android_final_project.firedate.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.UserOperator;
 import com.android_final_project.firedate.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -20,7 +18,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -137,7 +134,6 @@ public class Activity_SignUp extends AppCompatActivity {
             String format = new SimpleDateFormat("dd/MM/yyyy").format(c.getTime());
             signup_TXT_birthDate.setText(format);
             usersAgeInMillis = c.getTimeInMillis();
-//                tvAge.setText(Integer.toString(calculateAge(c.getTimeInMillis())));
         };
 
         signup_BTN_birthDate.setOnClickListener(view -> {

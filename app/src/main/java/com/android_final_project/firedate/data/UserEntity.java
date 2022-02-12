@@ -1,9 +1,7 @@
 package com.android_final_project.firedate.data;
 
 import android.location.Location;
-
 import java.util.Date;
-import java.util.Objects;
 
 public class UserEntity {
     private String userId;

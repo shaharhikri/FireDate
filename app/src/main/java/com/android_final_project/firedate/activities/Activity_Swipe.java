@@ -1,9 +1,6 @@
 package com.android_final_project.firedate.activities;
 
 import android.animation.Animator;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
@@ -14,23 +11,17 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.Adapters.UserArrayAdapter;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
 import com.android_final_project.firedate.utils.GPS;
-import com.android_final_project.firedate.utils.NotificationBackgroundProcess;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -42,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -50,13 +40,9 @@ public class Activity_Swipe extends AppCompatActivity {
 
     private Bundle bundle;
     private UserEntity userEntity;
-
-//    private ArrayList<String> cardList;
     private ArrayList<UserEntity> cardList;
     private ArrayList<String> cardsId = new ArrayList<>();
-//    private ArrayAdapter<String> arrayAdapter;
     private UserArrayAdapter arrayAdapter;
-    private int i;
 
     private SwipeFlingAdapterView flingContainer;
     private FloatingActionButton swipe_BTN_left;
@@ -65,30 +51,25 @@ public class Activity_Swipe extends AppCompatActivity {
     private ImageView swipe_BTN_settings;
     private ImageView swipe_BTN_chats;
     private LinearLayout swipe_LL_loading;
-//    private TextView swipe_TXT_print;
 
     private UserOperator userOperator;
     private String currentUserId;
     private UserOperator.SexualGroup currentUserSexualGroup;
     private DatabaseReference usersDb;
-    private int cardsPerPage = 20;
+    private static final int CARDS_PER_PAGE = 20;
     private String lastOtherUserID;
-    private boolean isLoading = false;
-
-//    private ArrayList<UserOperator.SexualGroup> userPreferenceGroups;
 
     private GPS gps;
     private Thread gpsThread;
     private Location currentLocation;
     private int userSearchingDistance = 50;
-    private long locationUpdateInterval = 300_000L;
+    private static final long LOCATION_UPDATE_INTERVAL = 300_000L;
     private DatabaseReference locationRef;
-    private Runnable gpsRunnable = () -> {
+    private final Runnable gpsRunnable = () -> {
         try {
             while (true) {
                 gps.getLocation(newLocation -> {
                     if (newLocation != null) {
-//                            Log.d("pttt", "handleGPS: " + newLocation);
                         int dis = gps.calculateDistance(currentLocation, newLocation);
                         if (Math.abs(dis) > 2) {
                             currentLocation = newLocation;
@@ -96,7 +77,7 @@ public class Activity_Swipe extends AppCompatActivity {
                         }
                     }
                 });
-                Thread.sleep(locationUpdateInterval);
+                Thread.sleep(LOCATION_UPDATE_INTERVAL);
             }
         } catch (InterruptedException ignored) {
 
@@ -110,14 +91,12 @@ public class Activity_Swipe extends AppCompatActivity {
     private Button swipe_btn_match;
 
     Runnable onBackPressed_swiping = () -> {
-        Log.d("ptttc", "onBackPressed_swiping");
         super.onBackPressed();
         finish();
         System.exit(0);
     };
     Runnable onBackPressed_run = onBackPressed_swiping;
     Runnable onBackPressed_match = () -> {
-        Log.d("ptttc", "onBackPressed_match");
         swipe_btn_match.setVisibility(View.INVISIBLE);
         swipe_btn_match.setOnClickListener( view2 -> { });
         swipe_layout_match.setVisibility(View.GONE);
@@ -159,11 +138,6 @@ public class Activity_Swipe extends AppCompatActivity {
         findViews();
 
         initValues();
-
-        //TODO add notifications
-//        handleNotifications();
-
-
 
     }
 
@@ -221,22 +195,6 @@ public class Activity_Swipe extends AppCompatActivity {
             gpsThread.interrupt();
     }
 
-    private void handleNotifications() {
-        Intent intent = new Intent(this, NotificationBackgroundProcess.class);
-        intent.setAction("BackgroundProcess");
-
-        Bundle notificationsBundle = new Bundle();
-        notificationsBundle.putString("test", "test1");
-        intent.putExtra("bundle", notificationsBundle);
-
-
-        //Set the repeated Task
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, 0, 10, pendingIntent);
-
-    }
-
 
     private void loadingAnimationStart() {
         swipe_LL_loading.setVisibility(View.VISIBLE);
@@ -256,17 +214,7 @@ public class Activity_Swipe extends AppCompatActivity {
             UserOperator.getUserGroup(currentUserId, sexualPreferenceGroups -> {
                 currentUserSexualGroup = sexualPreferenceGroups;
                 initFlingContainer(sexualPreferenceGroups.getPreferenceGroups());
-
                 waitForImageHandler_run.run();
-
-//                UserOperator.getUserData(currentUserId, currentUserSexualGroup, userData -> {
-//                    userEntity = userData;
-//                    bundle.putString(getString(R.string.key_currentUserId), currentUserId);
-//                    bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
-//                    bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
-//                    bundle.putInt(getString(R.string.key_currentUserSearchingDistance), userSearchingDistance);
-//                    endOnCreate();
-//                });
             });
         } else {
             String currentUserSexualGroupStr = bundle.getString(getString(R.string.key_currentUserSexualGroup));
@@ -346,9 +294,7 @@ public class Activity_Swipe extends AppCompatActivity {
     }
 
     private void initFlingContainer(ArrayList<UserOperator.SexualGroup> userPreferenceGroups){
-
         initCardList(userPreferenceGroups);
-
         arrayAdapter = new UserArrayAdapter(this, R.layout.item_swipe_card, cardList);
 
         flingContainer.setAdapter(arrayAdapter);
@@ -357,7 +303,6 @@ public class Activity_Swipe extends AppCompatActivity {
                     @Override
                     public void removeFirstObjectInAdapter() {
                         // this is the simplest way to delete an object from the Adapter (/AdapterView)
-//                        Log.d("pttt", "removed user: " + cardList.get(0).getUserId());
                         lastOtherUserID = cardList.get(0).getUserId();
                         cardList.remove(0);
                         arrayAdapter.notifyDataSetChanged();
@@ -368,16 +313,12 @@ public class Activity_Swipe extends AppCompatActivity {
                         //Do something on the left!
                         UserEntity obj = (UserEntity) dataObject;
                         handleSwipe(obj, "left");
-//                        swipe_TXT_print.setText(obj.getName() + " Left!");
-
                     }
 
                     @Override
                     public void onRightCardExit(Object dataObject) {
                         UserEntity obj = (UserEntity) dataObject;
                         handleSwipe(obj, "right");
-
-//                        swipe_TXT_print.setText(obj.getName() + " Right!");
                     }
 
                     @Override
@@ -401,9 +342,6 @@ public class Activity_Swipe extends AppCompatActivity {
             bundle.putString(getString(R.string.key_location) , new Gson().toJson(currentLocation));
             bundle.putFloat(getString(R.string.key_distance), currentLocation.distanceTo(tmp.getLocation()) / 100_000);
             changeActivity(Activity_UserDetails.class);
-
-//                Toast.makeText(MainActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
-//                swipe_TXT_print.setText(dataObject+" Clicked!");
         });
     }
 
@@ -480,14 +418,14 @@ public class Activity_Swipe extends AppCompatActivity {
                 query = usersDb
                         .child(sg.toString())
                         .orderByKey()
-                        .limitToFirst(cardsPerPage);
+                        .limitToFirst(CARDS_PER_PAGE);
             }
             else {
                 query = usersDb
                         .child(sg.toString())
                         .orderByKey()
                         .startAt(nodeId)
-                        .limitToFirst(cardsPerPage);
+                        .limitToFirst(CARDS_PER_PAGE);
             }
 
             int finalI = i;
@@ -499,9 +437,7 @@ public class Activity_Swipe extends AppCompatActivity {
                         UserEntity otherUser = getUserFromDB(userSnapshot);
 
                         // check if show this person to User
-                        if(isPotential(userSnapshot, otherUser)
-                        ){
-//                            Log.d("pttt", "add user: " + otherUser.getUserId());
+                        if(isPotential(userSnapshot, otherUser)){
                             cardList.add(otherUser);
                         }
 
@@ -513,13 +449,9 @@ public class Activity_Swipe extends AppCompatActivity {
                     }
 
                     arrayAdapter.notifyDataSetChanged();
-                    isLoading = false;
                 }
 
                 private UserEntity getUserFromDB(DataSnapshot userSnapshot) {
-//                    String userJSON = userSnapshot.toString();
-//                    UserEntity userEntity = new Gson().fromJson(userJSON, new UserEntity().getClass());
-//                    return userEntity;
 
                     String userID = userSnapshot.getKey();
                     String name = userSnapshot.child("name").getValue(String.class);
@@ -536,9 +468,7 @@ public class Activity_Swipe extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancelled(DatabaseError databaseError) {
-                    isLoading = false;
-                }
+                public void onCancelled(DatabaseError databaseError) { }
             });
         }
     }

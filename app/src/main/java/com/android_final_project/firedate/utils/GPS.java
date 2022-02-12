@@ -6,10 +6,8 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -29,8 +27,6 @@ public class GPS {
     private GPS(Context context) {
         this.context = context;
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-
-//        location = locationManager.
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(context);
     }
 
@@ -54,18 +50,8 @@ public class GPS {
         return null;
     }
 
-    /**
-     *
-     * @param cb
-     */
     public void getLocation(CallBack_GPS cb){
         if (checkPermission()) {
-//              fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-//                  cb.getLocation(location);
-//              });
-//                      .addOnCompleteListener( task->{
-//                cb.getLocation(task.getResult());
-//            });
 
             fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, new CancellationToken() {
                 @NonNull

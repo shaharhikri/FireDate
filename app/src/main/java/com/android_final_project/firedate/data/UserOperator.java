@@ -2,12 +2,9 @@ package com.android_final_project.firedate.data;
 
 import android.location.Location;
 import android.net.Uri;
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.android_final_project.firedate.R;
-import com.android_final_project.firedate.activities.Activity_Swipe;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -22,11 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserOperator {
-
-    // Male_Female : { Female_male},
-    // Female_Bisexual : { Female_Bisexul, Femal_Female, Male_Bisexual, Male_Female }
-//    final public static Map<SexualGroup, ArrayList<SexualGroup>> groupMap = new HashMap<SexualGroup, ArrayList<SexualGroup>>()
-//            .put(SexualGroup.Male_Male,new ArrayList<SexualGroup>(SexualGroup.Male_Male,))
 
     AppCompatActivity activity;
     static UserOperatorCallback userOpCallback;
@@ -245,6 +237,9 @@ public class UserOperator {
         Male_Female, Male_Male, Male_Bisexual, Female_Male, Female_Female, Female_Bisexual;
 
         public ArrayList<SexualGroup> getPreferenceGroups() {
+            /* For Example:
+               Male_Female : { Female_male},
+               Female_Bisexual : { Female_Bisexul, Femal_Female, Male_Bisexual, Male_Female } */
             ArrayList<SexualGroup> groups = new ArrayList<SexualGroup>();
             switch (this) {
                 case Male_Female:

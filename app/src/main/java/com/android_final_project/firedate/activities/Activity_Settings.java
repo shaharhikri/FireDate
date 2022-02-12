@@ -2,7 +2,6 @@ package com.android_final_project.firedate.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
@@ -15,7 +14,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -23,7 +21,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,7 +73,6 @@ public class Activity_Settings extends AppCompatActivity {
         description = currentUserEntity.getDescription();
         profileImgUrl = currentUserEntity.getProfileImageUrl();
         searchDistance = bundle.getInt(getString(R.string.key_currentUserSearchingDistance), 50);
-        Log.d("pttt", "initBundle: profileImgUrl" + profileImgUrl);
     }
 
     private void initViews() {

@@ -1,29 +1,21 @@
 package com.android_final_project.firedate.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.data.UserOperator;
 import com.android_final_project.firedate.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 public class Activity_Login extends AppCompatActivity {
 
-//    private EditText login_TXTF_email;
     private TextInputEditText login_TXTF_email;
     private TextInputEditText login_TXTF_password;
     private MaterialButton login_BTN_signup;
     private TextView login_error_msg;
-
     private UserOperator userOperator;
 
 
@@ -42,7 +34,6 @@ public class Activity_Login extends AppCompatActivity {
         userOperator = new UserOperator(this, new UserOperator.UserOperatorCallback() {
             @Override
             public void operationFailed(String msg) {
-//                Toast.makeText(Activity_Login.this,msg,Toast.LENGTH_SHORT).show();
                 login_error_msg.setText(msg);
             }
 
@@ -64,7 +55,6 @@ public class Activity_Login extends AppCompatActivity {
         login_BTN_signup.setOnClickListener( v -> {
             String email = login_TXTF_email.getText().toString();
             String pass = login_TXTF_password.getText().toString();
-
             userOperator.login(email, pass);
         });
     }

@@ -1,12 +1,8 @@
 package com.android_final_project.firedate.data;
 
 import android.content.Intent;
-import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.android_final_project.firedate.activities.Activity_Entry;
-import com.android_final_project.firedate.activities.Activity_Login;
 import com.android_final_project.firedate.activities.Activity_Swipe;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

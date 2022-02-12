@@ -4,10 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
-import android.util.Log;
-
 import com.android_final_project.firedate.Adapters.ChatListAdapter;
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.ChatListEntity;
@@ -29,8 +26,6 @@ public class Activity_ChatList extends AppCompatActivity {
 
     private DatabaseReference matchesDb;
     private DatabaseReference usersDb;
-
-    private UserOperator userOperator;
 
     private UserEntity currentUserEntity;
     private UserOperator.SexualGroup currentUserSexualGroup;

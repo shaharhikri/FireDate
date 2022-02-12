@@ -3,15 +3,11 @@ package com.android_final_project.firedate.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
-
 import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
-import android.widget.TextView;
-
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.UserEntity;
-import com.android_final_project.firedate.utils.GPS;
 import com.bumptech.glide.Glide;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.gson.Gson;
