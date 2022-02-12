@@ -48,5 +48,7 @@
     <string name="logout_dialog_supporting_text">Are you sure?</string>
     <string name="logout_dialog_cancel">Cancel</string>
     <string name="logout_dialog_yes">YES</string>
+    <string name="key_otherUserData">OTHER_USER_DATA_KEY</string>
+    <string name="key_location">LOCATION_KEY</string>
 
 </resources>

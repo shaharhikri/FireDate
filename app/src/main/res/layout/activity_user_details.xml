@@ -1,39 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    app:cardCornerRadius="20dp"
+    android:elevation="8dp"
+    app:cardElevation="8dp"
+    android:layout_margin="10dp"
     tools:context=".activities.Activity_UserDetails">
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/userDetails_BTN_back"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/back" />
 
-    <ScrollView
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:layout_below="@id/userDetails_BTN_back"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="match_parent">
 
-            <androidx.legacy.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
 
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="250dp"/>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/userDetails_IMG_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="450dp"
+                    android:scaleType="centerCrop"
+                    android:layout_marginHorizontal="8dp"
+                    android:src="@drawable/ic_launcher_background" />
 
-            <androidx.legacy.widget.Space
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-        </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/userDetails_LBL_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:gravity="top"
+                    android:maxLines="2"
+                    android:minLines="2"
+                    android:text="USER_NAME_AGE"
+                    android:textSize="24sp"
+                    tools:ignore="HardcodedText" />
 
-    </ScrollView>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/userDetails_LBL_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:minLines="5"
+                    android:text="USER_DESCRIPTION"
+                    tools:ignore="HardcodedText"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/userDetails_LBL_distance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Distance: 23KM"
+                    tools:ignore="HardcodedText"
+                    android:textSize="14sp" />
 
 
+            </LinearLayout>
+        </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</RelativeLayout>

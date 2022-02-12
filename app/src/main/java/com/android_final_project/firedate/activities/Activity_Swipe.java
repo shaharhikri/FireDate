@@ -9,8 +9,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -37,7 +35,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -360,9 +357,9 @@ public class Activity_Swipe extends AppCompatActivity {
 
         // Optionally add an OnItemClickListener
         flingContainer.setOnItemClickListener((itemPosition, dataObject) -> {
-
-//                Toast.makeText(MainActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
-//                swipe_TXT_print.setText(dataObject+" Clicked!");
+            bundle.putString(getString(R.string.key_otherUserData), new Gson().toJson(dataObject));
+            bundle.putString(getString(R.string.key_location) , new Gson().toJson(currentLocation));
+            changeActivity(Activity_UserDetails.class);
         });
     }
 

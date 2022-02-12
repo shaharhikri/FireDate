@@ -2,6 +2,7 @@ package com.android_final_project.firedate.data;
 
 import android.location.Location;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class UserEntity {
@@ -105,5 +106,10 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return userId.hashCode();
+    }
+
+    public int getAge(){
+        Date birthDay = new Date(this.usersAgeInMillis);
+        return new Date().getYear() - birthDay.getYear();
     }
 }

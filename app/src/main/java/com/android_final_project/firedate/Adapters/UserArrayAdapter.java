@@ -58,17 +58,13 @@ public class UserArrayAdapter extends ArrayAdapter<UserEntity> {
             userEntity.setUsersAgeInMillis(randomDate.getTime());
         }
 
-        String age = Integer.toString(calculateAge(userEntity.getUsersAgeInMillis()));
+        String age = Integer.toString(userEntity.getAge());
 
         card_TXT_name .setText(userEntity.getName() + ", " + age);
 
         return convertView;
     }
 
-    private int calculateAge(Long usersAgeInMillis) {
-        Date birthDay = new Date(usersAgeInMillis);
-        return new Date().getYear() - birthDay.getYear();
-    };
 
     private void findViews(View convertView) {
         card_IMG_image = convertView.findViewById(R.id.card_IMG_image);
