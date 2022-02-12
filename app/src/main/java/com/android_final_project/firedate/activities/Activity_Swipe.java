@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -477,13 +478,20 @@ public class Activity_Swipe extends AppCompatActivity {
                 }
 
                 private UserEntity getUserFromDB(DataSnapshot userSnapshot) {
+//                    String userJSON = userSnapshot.toString();
+//                    UserEntity userEntity = new Gson().fromJson(userJSON, new UserEntity().getClass());
+//                    return userEntity;
+
                     String userID = userSnapshot.getKey();
                     String name = userSnapshot.child("name").getValue(String.class);
                     String description = userSnapshot.child("description").getValue(String.class);
                     String profileImageUrl = userSnapshot.child("profileImageUrl").getValue(String.class);
-                    long usersAgeInMillis = userSnapshot.child("usersAgeInMillis").getValue(long.class);
-                    Location location = userSnapshot.child("location").getValue(Location.class);
-                    int searchDistance = userSnapshot.child("searchDistance").getValue(int.class);
+                    Long usersAgeInMillis = userSnapshot.child("usersAgeInMillis").getValue(Long.class);
+                    Integer searchDistance = userSnapshot.child("searchDistance").getValue(Integer.class);
+
+                    String locationJSON = userSnapshot.child("location").exists() ?
+                            userSnapshot.child("location").getValue().toString(): null;
+                    Location location = new Gson().fromJson(locationJSON, Location.class);
 
                     return new UserEntity(userID, name, description, profileImageUrl, usersAgeInMillis, location, searchDistance);
                 }
