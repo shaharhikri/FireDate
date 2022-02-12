@@ -1,5 +1,7 @@
 package com.android_final_project.firedate.data;
 
+import android.location.Location;
+
 import java.util.Objects;
 
 public class UserEntity {
@@ -8,25 +10,39 @@ public class UserEntity {
     private String description;
     private String profileImageUrl = null;
     private long usersAgeInMillis;
+    private Location location;
     private int searchDistance;
 
 
     public UserEntity() { }
 
-    @Deprecated
-    public UserEntity(String userId, String name, String description, String profileImageUrl) {
-        this.userId = userId;
-        this.name = name;
-        this.description = description;
-        this.profileImageUrl = profileImageUrl;
-    }
+//    @Deprecated
+//    public UserEntity(String userId, String name, String description, String profileImageUrl) {
+//        this.userId = userId;
+//        this.name = name;
+//        this.description = description;
+//        this.profileImageUrl = profileImageUrl;
+//        this.usersAgeInMillis = 807657172701L;
+//    }
 
-    public UserEntity(String userId, String name, String description, String profileImageUrl, long usersAgeInMillis, int searchDistance) {
+//    @Deprecated
+//    public UserEntity(String userId, String name, String description, String profileImageUrl, long usersAgeInMillis, int searchDistance) {
+//        this.userId = userId;
+//        this.name = name;
+//        this.description = description;
+//        this.profileImageUrl = profileImageUrl;
+//        this.usersAgeInMillis = usersAgeInMillis;
+//        this.searchDistance = searchDistance;
+//    }
+
+
+    public UserEntity(String userId, String name, String description, String profileImageUrl, long usersAgeInMillis, Location location, int searchDistance) {
         this.userId = userId;
         this.name = name;
         this.description = description;
         this.profileImageUrl = profileImageUrl;
         this.usersAgeInMillis = usersAgeInMillis;
+        this.location = location;
         this.searchDistance = searchDistance;
     }
 
@@ -86,6 +102,15 @@ public class UserEntity {
 
     public UserEntity setSearchDistance(int searchDistance) {
         this.searchDistance = searchDistance;
+        return this;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public UserEntity setLocation(Location location) {
+        this.location = location;
         return this;
     }
 

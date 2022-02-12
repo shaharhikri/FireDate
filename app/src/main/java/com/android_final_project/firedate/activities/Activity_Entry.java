@@ -1,10 +1,13 @@
 package com.android_final_project.firedate.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.android_final_project.firedate.R;
 import com.android_final_project.firedate.data.UserOperator;
 import com.google.android.material.button.MaterialButton;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
@@ -22,6 +25,8 @@ public class Activity_Entry extends AppCompatActivity {
 
         findViews();
         initViews();
+
+        grantLocationPermission();
     }
 
 
@@ -48,5 +53,10 @@ public class Activity_Entry extends AppCompatActivity {
         super.onBackPressed();
         finish();
         System.exit(0);
+    }
+
+    private void grantLocationPermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 44);
     }
 }

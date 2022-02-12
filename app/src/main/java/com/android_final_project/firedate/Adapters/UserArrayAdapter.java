@@ -57,6 +57,7 @@ public class UserArrayAdapter extends ArrayAdapter<UserEntity> {
             randomDate.setYear(new Date().getYear() - (new Random().nextInt(12) + 18));
             userEntity.setUsersAgeInMillis(randomDate.getTime());
         }
+
         String age = Integer.toString(calculateAge(userEntity.getUsersAgeInMillis()));
 
         card_TXT_name .setText(userEntity.getName() + ", " + age);

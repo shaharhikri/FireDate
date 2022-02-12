@@ -61,32 +61,7 @@ public class UserOperator {
 
     @Deprecated
     public void signup(String email, String pass1, String pass2, String name, String description, SexualGroup group){
-        if(email==null || email.isEmpty()){
-            userOpCallback.operationFailed(activity.getString(R.string.empty_email));
-        }
-        else if(pass1==null || pass2==null || pass1.isEmpty() || pass2.isEmpty()) {
-            userOpCallback.operationFailed(activity.getString(R.string.empty_pass));
-        }
-        else if(name==null || name.isEmpty()) {
-            userOpCallback.operationFailed(activity.getString(R.string.signup_empty_name));
-        }
-        else if(pass1.compareTo(pass2)!=0){
-            userOpCallback.operationFailed(activity.getString(R.string.signup_passworddidntmatch));
-        }
-        else{
-            AuthSingleton.getMe().createUserWithEmailAndPassword(email, pass1).addOnCompleteListener(activity,
-                    task -> { //sign up failed
-                        if (!task.isSuccessful()) { // if email is taken, or password is too short
-                            task.addOnFailureListener(exception -> userOpCallback.operationFailed(exception.getMessage()));
-                        }
-                        else{ //sign up succeeded
-                            String userId = AuthSingleton.getMe().getCurrentUser().getUid();
-                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null);
-                            addUserToDB(userEntity, group);
-                            userOpCallback.operationSucceeded();
-                        }
-                    });
-        }
+        throw new RuntimeException("Deprecated Method");
     }
 
     public void signup(String email, String pass1, String pass2, String name, Long usersAgeInMillis, String description, Uri profileImgPath, SexualGroup group) {
@@ -116,7 +91,7 @@ public class UserOperator {
                         }
                         else{ //sign up succeeded
                             String userId = AuthSingleton.getMe().getCurrentUser().getUid();
-                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null, usersAgeInMillis, 20);
+                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null, usersAgeInMillis, null, 50);
                             addUserToDB(userEntity, group);
                             saveImgInStorage(userId, group, profileImgPath, imgUrl -> {
                                 userEntity.setProfileImageUrl(imgUrl);

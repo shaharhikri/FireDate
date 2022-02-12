@@ -14,7 +14,7 @@
         <!-- Customize your theme here. -->
 
 
-        <item name="colorPrimaryDark">@color/button_dark</item>
+        <item name="colorPrimaryDark">@color/myStatusBar</item>
 
     </style>
 </resources>

@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -53,9 +55,9 @@ public class Activity_Swipe extends AppCompatActivity {
     private SwipeFlingAdapterView flingContainer;
     private FloatingActionButton swipe_BTN_left;
     private FloatingActionButton swipe_BTN_right;
-    private Button swipe_BTN_logout;
-    private Button swipe_BTN_settings;
-    private Button swipe_BTN_chats;
+    private ImageView swipe_BTN_logout;
+    private ImageView swipe_BTN_settings;
+    private ImageView swipe_BTN_chats;
     private LinearLayout swipe_LL_loading;
 //    private TextView swipe_TXT_print;
 
@@ -453,14 +455,8 @@ public class Activity_Swipe extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                        UserEntity otherUser = new UserEntity(
-                                userSnapshot.getKey(),
-                                userSnapshot.child("name").getValue().toString(),
-                                userSnapshot.child("description").getValue().toString(),
-                                userSnapshot.child("profileImageUrl").getValue() == null ?
-                                        null :
-                                        userSnapshot.child("profileImageUrl").getValue().toString()
-                                );
+
+                        UserEntity otherUser = getUserFromDB(userSnapshot);
 
                         // check if show this person to User
                         if(isPotential(userSnapshot, otherUser)
@@ -479,6 +475,19 @@ public class Activity_Swipe extends AppCompatActivity {
                     arrayAdapter.notifyDataSetChanged();
                     isLoading = false;
                 }
+
+                private UserEntity getUserFromDB(DataSnapshot userSnapshot) {
+                    String userID = userSnapshot.getKey();
+                    String name = userSnapshot.child("name").getValue(String.class);
+                    String description = userSnapshot.child("description").getValue(String.class);
+                    String profileImageUrl = userSnapshot.child("profileImageUrl").getValue(String.class);
+                    long usersAgeInMillis = userSnapshot.child("usersAgeInMillis").getValue(long.class);
+                    Location location = userSnapshot.child("location").getValue(Location.class);
+                    int searchDistance = userSnapshot.child("searchDistance").getValue(int.class);
+
+                    return new UserEntity(userID, name, description, profileImageUrl, usersAgeInMillis, location, searchDistance);
+                }
+
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     isLoading = false;
@@ -504,16 +513,16 @@ public class Activity_Swipe extends AppCompatActivity {
         if (cardList.contains(otherUser)){
             flag = false;
         }
-        if (!userSnapshot.child("location").exists()){
-            flag = false;
-        } else {
-            Location otherUserLocation = userSnapshot.child("location").getValue(Location.class);
-            if (otherUserLocation != null) {
-                if (gps.calculateDistance(currentLocation, otherUserLocation) <= userSearchingDistance) {
-                    flag = false;
-                }
-            }
-        }
+//        if (!userSnapshot.child("location").exists()){
+//            flag = false;
+//        } else {
+//            Location otherUserLocation = userSnapshot.child("location").getValue(Location.class);
+//            if (otherUserLocation != null) {
+//                if (gps.calculateDistance(currentLocation, otherUserLocation) <= userSearchingDistance) {
+//                    flag = false;
+//                }
+//            }
+//        }
 
         return flag;
     }

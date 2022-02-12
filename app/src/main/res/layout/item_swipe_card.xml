@@ -6,9 +6,9 @@
     android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="40sp"
-    android:paddingVertical="20sp"
-    android:layout_margin="20dp"
+    android:paddingHorizontal="5dp"
+    android:paddingVertical="5dp"
+    android:layout_margin="12dp"
     android:outlineProvider="bounds"
     android:clipToPadding="false">
 
@@ -30,15 +30,24 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_alignStart="@+id/card_IMG_image"
+                android:layout_alignBottom="@+id/card_IMG_image"
+                android:background="@drawable/png_fade" />
+
             <TextView
                 android:id="@+id/card_TXT_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/card_IMG_image"
                 android:layout_alignBottom="@+id/card_IMG_image"
-                android:layout_margin="10dp"
-                android:background="#66FFFFFF"
-                android:textColor="@android:color/black"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@android:color/white"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 tools:text="name" />
