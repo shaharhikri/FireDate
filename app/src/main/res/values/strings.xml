@@ -42,5 +42,11 @@
     <string name="back">Back</string>
     <string name="confirm">Confirm</string>
     <string name="date_of_birth_btn">Date of Birth</string>
+    <string name="key_currentUserRadius">CURRENT_USER_RADIUS_KEY</string>
+    <string name="slider_radius">Radius</string>
+    <string name="logout_dialog_title">Logout</string>
+    <string name="logout_dialog_supporting_text">Are you sure?</string>
+    <string name="logout_dialog_cancel">Cancel</string>
+    <string name="logout_dialog_yes">YES</string>
 
 </resources>

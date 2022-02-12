@@ -93,7 +93,6 @@ public class Activity_SignUp extends AppCompatActivity {
             String name = signup_TXTF_name.getText().toString();
             String description = signup_TXTF_description.getText().toString();
 
-            //TODO under 18
 
             RadioButton genderRadioButton = findViewById(signup_gender_radioGroup.getCheckedRadioButtonId());
             String gender = genderRadioButton.getText().toString();

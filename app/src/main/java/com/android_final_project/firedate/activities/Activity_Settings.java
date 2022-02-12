@@ -8,6 +8,7 @@ import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.slider.Slider;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -37,11 +38,13 @@ public class Activity_Settings extends AppCompatActivity {
     private TextInputEditText    settings_ETXT_description;
     private MaterialButton      settings_BTN_confirm;
     private MaterialButton settings_BTN_back;
+    private Slider settings_SLDR_slider;
 
     private DatabaseReference usersDb;
     private UserOperator.SexualGroup currentUserSexualGroup;
     private String currentUserId;
     private String profileImgUrl, name, description;
+    private int searchDistance;
     private Uri profileImgPath;
 
     private UserEntity currentUserEntity;
@@ -116,8 +119,9 @@ public class Activity_Settings extends AppCompatActivity {
     private void confirmForm() {
         name = settings_ETXT_name.getText().toString();
         description = settings_ETXT_description.getText().toString();
+        searchDistance = (int) settings_SLDR_slider.getValue();
 
-        currentUserEntity.setName(name).setDescription(description);
+        currentUserEntity.setName(name).setDescription(description).setSearchDistance(searchDistance);
 
         // update firebase
         UserOperator.updateUserInDB(currentUserEntity, currentUserSexualGroup);
@@ -125,6 +129,7 @@ public class Activity_Settings extends AppCompatActivity {
         // update bundle
         bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
         bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(currentUserEntity));
+        bundle.putInt(getString(R.string.key_currentUserRadius), searchDistance);
 
         // save image
         if (profileImgPath != null){
@@ -161,7 +166,7 @@ public class Activity_Settings extends AppCompatActivity {
         Intent intent = new Intent(this, activity);
         bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
         bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(currentUserEntity));
-//        intent.putExtra(getString(R.string.key_bundle), bundle);
+        intent.putExtra(getString(R.string.key_bundle), bundle);
         startActivity(intent);
         finish();
     }
@@ -172,6 +177,7 @@ public class Activity_Settings extends AppCompatActivity {
         settings_ETXT_description = findViewById(R.id.settings_ETXT_description);
         settings_BTN_confirm = findViewById(R.id.settings_BTN_confirm);
         settings_BTN_back = findViewById(R.id.settings_BTN_back);
+        settings_SLDR_slider = findViewById(R.id.settings_SLDR_slider);
     }
 }
 

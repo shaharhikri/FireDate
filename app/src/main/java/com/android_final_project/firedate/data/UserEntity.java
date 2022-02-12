@@ -7,7 +7,8 @@ public class UserEntity {
     private String name;
     private String description;
     private String profileImageUrl = null;
-    private Long usersAgeInMillis;
+    private long usersAgeInMillis;
+    private int searchDistance;
 
 
     public UserEntity() { }
@@ -20,12 +21,13 @@ public class UserEntity {
         this.profileImageUrl = profileImageUrl;
     }
 
-    public UserEntity(String userId, String name, String description, String profileImageUrl, Long usersAgeInMillis) {
+    public UserEntity(String userId, String name, String description, String profileImageUrl, long usersAgeInMillis, int searchDistance) {
         this.userId = userId;
         this.name = name;
         this.description = description;
         this.profileImageUrl = profileImageUrl;
         this.usersAgeInMillis = usersAgeInMillis;
+        this.searchDistance = searchDistance;
     }
 
     public String getUserId() {
@@ -70,6 +72,20 @@ public class UserEntity {
 
     public UserEntity setUsersAgeInMillis(Long usersAgeInMillis) {
         this.usersAgeInMillis = usersAgeInMillis;
+        return this;
+    }
+
+    public UserEntity setUsersAgeInMillis(long usersAgeInMillis) {
+        this.usersAgeInMillis = usersAgeInMillis;
+        return this;
+    }
+
+    public int getSearchDistance() {
+        return searchDistance;
+    }
+
+    public UserEntity setSearchDistance(int searchDistance) {
+        this.searchDistance = searchDistance;
         return this;
     }
 

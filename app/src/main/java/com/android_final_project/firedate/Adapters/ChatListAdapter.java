@@ -49,7 +49,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         holder.chatID = chatListEntities.get(position).getChatId();
         holder.otherUserID = chatListEntities.get(position).getUserId();
         holder.otherUserSexualGroup = chatListEntities.get(position).getUserSexualGroup();
-        //TODO add time
         holder.chatListItem_TXT_matchName.setText(chatListEntities.get(position).getName());
         if(!chatListEntities.get(position).getProfileImageUrl().equals("default")){
             Glide

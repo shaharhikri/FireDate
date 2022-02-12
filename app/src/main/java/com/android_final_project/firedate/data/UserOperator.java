@@ -81,8 +81,7 @@ public class UserOperator {
                         }
                         else{ //sign up succeeded
                             String userId = AuthSingleton.getMe().getCurrentUser().getUid();
-                            // TODO add image
-                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null); //TODO add image
+                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null);
                             addUserToDB(userEntity, group);
                             userOpCallback.operationSucceeded();
                         }
@@ -117,7 +116,7 @@ public class UserOperator {
                         }
                         else{ //sign up succeeded
                             String userId = AuthSingleton.getMe().getCurrentUser().getUid();
-                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null, usersAgeInMillis); //TODO add image
+                            UserEntity userEntity = new UserEntity(userId, name, (description==null? "": description), null, usersAgeInMillis, 20);
                             addUserToDB(userEntity, group);
                             saveImgInStorage(userId, group, profileImgPath, imgUrl -> {
                                 userEntity.setProfileImageUrl(imgUrl);
@@ -137,7 +136,7 @@ public class UserOperator {
         user.child("name").setValue(userEntity.getName());
         user.child("description").setValue(userEntity.getDescription());
         user.child("usersAgeInMillis").setValue(userEntity.getUsersAgeInMillis());
-        user.child("profileImgUrl").setValue(userEntity.getProfileImageUrl());
+        user.child("profileImageUrl").setValue(userEntity.getProfileImageUrl());
 
         db.child("UsersGroup")
                 .child(userEntity.getUserId())
@@ -153,6 +152,7 @@ public class UserOperator {
 
         user.child("name").setValue(userEntity.getName());
         user.child("description").setValue(userEntity.getDescription());
+        user.child("searchDistance").setValue(userEntity.getSearchDistance());
 
         db.child("UsersGroup")
                 .child(userEntity.getUserId())
