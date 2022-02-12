@@ -21,6 +21,7 @@ public class Activity_UserDetails extends AppCompatActivity {
     private Bundle bundle;
     private UserEntity userEntity;
     private Location currentLocation;
+    private float distance;
 
     private AppCompatImageView  userDetails_IMG_image       ;
     private MaterialTextView    userDetails_LBL_name        ;
@@ -44,7 +45,6 @@ public class Activity_UserDetails extends AppCompatActivity {
                 .with(this)
                 .load(imgUrl)
                 .into(userDetails_IMG_image);
-
         String tmp;
 
         tmp = String.format("%s, %d", userEntity.getName(), userEntity.getAge());
@@ -52,8 +52,11 @@ public class Activity_UserDetails extends AppCompatActivity {
 
         userDetails_LBL_description.setText(userEntity.getDescription());
 
-        int distance = GPS.getMe().calculateDistance(currentLocation, userEntity.getLocation());
-        tmp = String.format("Distance: %d KM", distance);
+
+//        int distance = GPS.getMe().calculateDistance(currentLocation, userEntity.getLocation());
+        tmp = String.format("Distance: %.2f KM", distance);
+//        tmp = String.format("MyDis: %.2f, %.2f; userDis: %.2f, %.2f", currentLocation.getLatitude(), currentLocation.getLongitude(),
+//                userEntity.getLocation().getLatitude(), userEntity.getLocation().getLongitude());
         userDetails_LBL_distance.setText(tmp);
 
 
@@ -76,6 +79,9 @@ public class Activity_UserDetails extends AppCompatActivity {
         this.bundle = getIntent().getBundleExtra(getString(R.string.key_bundle));
         String userEntityJSON = bundle.getString(getString(R.string.key_otherUserData));
         userEntity = new Gson().fromJson(userEntityJSON, UserEntity.class);
+
+
+        distance = bundle.getFloat(getString(R.string.key_distance));
 
         String currentLocationJSON = bundle.getString(getString(R.string.key_location));
         currentLocation = new Gson().fromJson(currentLocationJSON, Location.class);

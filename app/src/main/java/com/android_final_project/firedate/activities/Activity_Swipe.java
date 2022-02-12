@@ -357,9 +357,12 @@ public class Activity_Swipe extends AppCompatActivity {
 
         // Optionally add an OnItemClickListener
         flingContainer.setOnItemClickListener((itemPosition, dataObject) -> {
-            bundle.putString(getString(R.string.key_otherUserData), new Gson().toJson(dataObject));
+            UserEntity tmp = (UserEntity) dataObject;
+            bundle.putString(getString(R.string.key_otherUserData), new Gson().toJson(tmp));
             bundle.putString(getString(R.string.key_location) , new Gson().toJson(currentLocation));
+            bundle.putFloat(getString(R.string.key_distance), currentLocation.distanceTo(tmp.getLocation()) / 100_000);
             changeActivity(Activity_UserDetails.class);
+
         });
     }
 

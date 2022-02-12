@@ -110,6 +110,30 @@ public class UserEntity {
 
     public int getAge(){
         Date birthDay = new Date(this.usersAgeInMillis);
-        return new Date().getYear() - birthDay.getYear();
+        Date now = new Date();
+        int age = now.getYear() - birthDay.getYear();
+        int month = now.getMonth() - birthDay.getMonth();
+        if( month < 0){
+            age++;
+        }else if (month == 0){
+            int day = now.getDay() - birthDay.getDay();
+            if (day <= 0){
+                age++;
+            }
+        }
+        return age;
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "userId='" + userId + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", profileImageUrl='" + profileImageUrl + '\'' +
+                ", usersAgeInMillis=" + usersAgeInMillis +
+                ", location=" + location +
+                ", searchDistance=" + searchDistance +
+                '}';
     }
 }

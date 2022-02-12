@@ -1,5 +1,6 @@
 package com.android_final_project.firedate.data;
 
+import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
 
@@ -184,15 +185,16 @@ public class UserOperator {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                userEntity.setName(snapshot.child("name").getValue().toString());
-                userEntity.setDescription(snapshot.child("description").getValue().toString());
-                // TODO delete
-                if ( snapshot.child("profileImageUrl").getValue() != null) {
-                    userEntity.setProfileImageUrl(snapshot.child("profileImageUrl").getValue().toString());
-                }
-                if ( snapshot.child("searchingDistance").getValue(int.class) != null) {
-                    userEntity.setSearchDistance(snapshot.child("searchingDistance").getValue(int.class));
-                }
+                userEntity.setName(snapshot.child("name").getValue(String.class));
+                userEntity.setDescription(snapshot.child("description").getValue(String.class));
+                userEntity.setProfileImageUrl(snapshot.child("profileImageUrl").getValue(String.class));
+                userEntity.setUsersAgeInMillis(snapshot.child("usersAgeInMillis").getValue(Long.class));
+
+                String locationJSON = snapshot.child("location").getValue().toString();
+                Location location = new Gson().fromJson(locationJSON, Location.class);
+                userEntity.setLocation(location);
+                userEntity.setSearchDistance(snapshot.child("searchingDistance").getValue(Integer.class));
+
                 callback.UserData(userEntity);
             }
 
