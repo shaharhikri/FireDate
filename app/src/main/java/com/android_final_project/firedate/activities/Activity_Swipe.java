@@ -1,25 +1,20 @@
 package com.android_final_project.firedate.activities;
 
 import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 
 import com.android_final_project.firedate.R;
@@ -27,7 +22,9 @@ import com.android_final_project.firedate.data.AuthSingleton;
 import com.android_final_project.firedate.Adapters.UserArrayAdapter;
 import com.android_final_project.firedate.data.UserEntity;
 import com.android_final_project.firedate.data.UserOperator;
+import com.android_final_project.firedate.utils.GPS;
 import com.android_final_project.firedate.utils.NotificationBackgroundProcess;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +36,6 @@ import com.google.gson.Gson;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Activity_Swipe extends AppCompatActivity {
@@ -73,14 +69,38 @@ public class Activity_Swipe extends AppCompatActivity {
 
 //    private ArrayList<UserOperator.SexualGroup> userPreferenceGroups;
 
-    private ListView listView;
-    private List<UserEntity> rowItems;
+    private GPS gps;
+    private Thread gpsThread;
+    private Location currentLocation;
+    private int userSearchingDistance = 50;
+    private long locationUpdateInterval = 300_000L;
+    private DatabaseReference locationRef;
+    private Runnable gpsRunnable = () -> {
+        try {
+            while (true) {
+                gps.getLocation(newLocation -> {
+                    if (newLocation != null) {
+//                            Log.d("pttt", "handleGPS: " + newLocation);
+                        int dis = gps.calculateDistance(currentLocation, newLocation);
+                        if (Math.abs(dis) > 2) {
+                            currentLocation = newLocation;
+                            locationRef.setValue(currentLocation);
+                        }
+                    }
+                });
+                Thread.sleep(locationUpdateInterval);
+            }
+        } catch (InterruptedException ignored) {
+
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_swipe);
-
+        gps = GPS.getMe();
 
 
         initUserOperator();
@@ -91,18 +111,77 @@ public class Activity_Swipe extends AppCompatActivity {
 
         initValues();
 
-        handleNotifications();
+        //TODO add notifications
+//        handleNotifications();
 
+
+
+    }
+
+    private void endOnCreate() {
+        initViews();
+        locationRef = usersDb
+                .child(currentUserSexualGroup.toString())
+                .child(currentUserId)
+                .child("location");
+
+        Log.d("pttt", "endOnCreate: Searching dis: " + userSearchingDistance);
+
+        startGpsSampling();
+        loadingAnimationEnd();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("pttt", "onResume: " + gpsThread);
+        startGpsSampling();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopGpsSampling();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        System.exit(0);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        stopGpsSampling();
+    }
+
+    private void startGpsSampling() {
+        if((gpsThread!=null && gpsThread.isAlive()) || locationRef == null)
+            return;
+
+        Log.d("pttt", "handleGPS: enter");
+
+        currentLocation = null;
+        gpsThread = new Thread(gpsRunnable);
+        gpsThread.start();
+    }
+
+    public void stopGpsSampling(){
+        if(gpsThread!=null && gpsThread.isAlive())
+            gpsThread.interrupt();
     }
 
     private void handleNotifications() {
         Intent intent = new Intent(this, NotificationBackgroundProcess.class);
         intent.setAction("BackgroundProcess");
 
-
         Bundle notificationsBundle = new Bundle();
         notificationsBundle.putString("test", "test1");
         intent.putExtra("bundle", notificationsBundle);
+
+
         //Set the repeated Task
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -143,17 +222,16 @@ public class Activity_Swipe extends AppCompatActivity {
                     bundle.putString(getString(R.string.key_currentUserId), currentUserId);
                     bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
                     bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
-
-                    initViews();
-                    loadingAnimationEnd();
+                    bundle.putInt(getString(R.string.key_currentUserSearchingDistance), userSearchingDistance);
+                    endOnCreate();
                 });
             });
         } else {
             String currentUserSexualGroupStr = bundle.getString(getString(R.string.key_currentUserSexualGroup));
             currentUserSexualGroup = UserOperator.SexualGroup.valueOf(currentUserSexualGroupStr);
             initFlingContainer(currentUserSexualGroup.getPreferenceGroups());
-            initViews();
-            loadingAnimationEnd();
+            userSearchingDistance = bundle.getInt(getString(R.string.key_currentUserSearchingDistance), 50);
+            endOnCreate();
         }
     }
 
@@ -178,7 +256,6 @@ public class Activity_Swipe extends AppCompatActivity {
         swipe_BTN_logout = findViewById(R.id.swipe_BTN_logout);
         swipe_BTN_settings = findViewById(R.id.swipe_BTN_settings);
         swipe_BTN_chats = findViewById(R.id.swipe_BTN_chats);
-//        swipe_TXT_print = findViewById(R.id.swipe_TXT_print);
         swipe_LL_loading = findViewById(R.id.swipe_LL_loading);
     }
 
@@ -187,22 +264,33 @@ public class Activity_Swipe extends AppCompatActivity {
             try {
                 flingContainer.getTopCardListener().selectLeft();
             }
-            catch(NullPointerException e){ }
+            catch(NullPointerException ignored){ }
         });
         swipe_BTN_right.setOnClickListener(v -> {
             try {
                 flingContainer.getTopCardListener().selectRight();
             }
-            catch(NullPointerException e){ }
+            catch(NullPointerException ignored){ }
         });
-        swipe_BTN_logout.setOnClickListener(v -> {
-            userOperator.logout();
-            finish();});
+        swipe_BTN_logout.setOnClickListener(v -> logoutDialogMsg());
         swipe_BTN_settings.setOnClickListener(v -> {
             changeActivity(Activity_Settings.class);
             finish();});
         swipe_BTN_chats.setOnClickListener(v -> {
             changeActivity(Activity_ChatList.class);});
+    }
+
+    private void logoutDialogMsg() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(getString(R.string.logout_dialog_title))
+                .setMessage(getString(R.string.logout_dialog_supporting_text))
+                .setNeutralButton(getString(R.string.logout_dialog_cancel), (dialogInterface, i1) -> {
+                })
+                .setPositiveButton(getString(R.string.logout_dialog_yes), (dialogInterface, i1) -> {
+                    userOperator.logout();
+                    finish();
+                })
+                .show();
     }
 
     private void changeActivity(Class<?> activity) {
@@ -212,8 +300,6 @@ public class Activity_Swipe extends AppCompatActivity {
     }
 
     private void initFlingContainer(ArrayList<UserOperator.SexualGroup> userPreferenceGroups){
-
-        //TODO: Do somethig with the list
 
         initCardList(userPreferenceGroups);
 
@@ -270,12 +356,10 @@ public class Activity_Swipe extends AppCompatActivity {
         );
 
         // Optionally add an OnItemClickListener
-        flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClicked(int itemPosition, Object dataObject) {
+        flingContainer.setOnItemClickListener((itemPosition, dataObject) -> {
+
 //                Toast.makeText(MainActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
 //                swipe_TXT_print.setText(dataObject+" Clicked!");
-            }
         });
     }
 
@@ -342,7 +426,6 @@ public class Activity_Swipe extends AppCompatActivity {
         Query query;
         int listSize = userPreferenceGroups.size();
 
-        // TODO: what happen if someone join in start of list;
         for (int i = 0; i < listSize; i++) {
             UserOperator.SexualGroup sg = userPreferenceGroups.get(i);
             String nodeId;
@@ -378,12 +461,9 @@ public class Activity_Swipe extends AppCompatActivity {
                                         null :
                                         userSnapshot.child("profileImageUrl").getValue().toString()
                                 );
-                        // TODO: check if show this person to User(duplicate)
-                        if(!otherUser.getUserId().equals(currentUserId)
-                                && !userSnapshot.child("swipes").child("left").hasChild(currentUserId)
-                                && !userSnapshot.child("swipes").child("right").hasChild(currentUserId)
-                                && !otherUser.getUserId().equals(lastOtherUserID)
-                                && !cardList.contains(otherUser)
+
+                        // check if show this person to User
+                        if(isPotential(userSnapshot, otherUser)
                         ){
 //                            Log.d("pttt", "add user: " + otherUser.getUserId());
                             cardList.add(otherUser);
@@ -399,7 +479,6 @@ public class Activity_Swipe extends AppCompatActivity {
                     arrayAdapter.notifyDataSetChanged();
                     isLoading = false;
                 }
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
                     isLoading = false;
@@ -408,10 +487,34 @@ public class Activity_Swipe extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-        System.exit(0);
+    private boolean isPotential(DataSnapshot userSnapshot, UserEntity otherUser) {
+        boolean flag = true;
+        if (otherUser.getUserId().equals(currentUserId)){
+            return false;
+        }
+        if (userSnapshot.child("swipes").child("left").hasChild(currentUserId)){
+            flag = false;
+        }
+        if (userSnapshot.child("swipes").child("right").hasChild(currentUserId)){
+            flag = false;
+        }
+        if (otherUser.getUserId().equals(lastOtherUserID)){
+            flag = false;
+        }
+        if (cardList.contains(otherUser)){
+            flag = false;
+        }
+        if (!userSnapshot.child("location").exists()){
+            flag = false;
+        } else {
+            Location otherUserLocation = userSnapshot.child("location").getValue(Location.class);
+            if (otherUserLocation != null) {
+                if (gps.calculateDistance(currentLocation, otherUserLocation) <= userSearchingDistance) {
+                    flag = false;
+                }
+            }
+        }
+
+        return flag;
     }
 }

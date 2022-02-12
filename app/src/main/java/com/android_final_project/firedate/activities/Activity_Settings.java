@@ -21,8 +21,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -68,6 +66,7 @@ public class Activity_Settings extends AppCompatActivity {
         String currentUserEntityStr = bundle.getString(getString(R.string.key_currentUserData));
         currentUserEntity = new Gson().fromJson(currentUserEntityStr, UserEntity.class);
 
+
         usersDb = FirebaseDatabase.getInstance().getReference()
                 .child("Users")
                 .child(currentUserSexualGroupStr)
@@ -76,6 +75,7 @@ public class Activity_Settings extends AppCompatActivity {
         name = currentUserEntity.getName();
         description = currentUserEntity.getDescription();
         profileImgUrl = currentUserEntity.getProfileImageUrl();
+        searchDistance = bundle.getInt(getString(R.string.key_currentUserSearchingDistance), 50);
         Log.d("pttt", "initBundle: profileImgUrl" + profileImgUrl);
     }
 
@@ -86,6 +86,7 @@ public class Activity_Settings extends AppCompatActivity {
         });
         settings_ETXT_name.setText(name);
         settings_ETXT_description.setText(description);
+        settings_SLDR_slider.setValue(searchDistance);
 
         if (profileImgUrl != null) {
             Glide.with(getApplication())
@@ -129,7 +130,7 @@ public class Activity_Settings extends AppCompatActivity {
         // update bundle
         bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
         bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(currentUserEntity));
-        bundle.putInt(getString(R.string.key_currentUserRadius), searchDistance);
+        bundle.putInt(getString(R.string.key_currentUserSearchingDistance), searchDistance);
 
         // save image
         if (profileImgPath != null){
@@ -159,7 +160,7 @@ public class Activity_Settings extends AppCompatActivity {
             changeActivity(Activity_Swipe.class);
         }
 
-        Toast.makeText(this, "Data Saved!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Settings Saved!", Toast.LENGTH_SHORT).show();
     }
 
     private void changeActivity(Class<?> activity) {

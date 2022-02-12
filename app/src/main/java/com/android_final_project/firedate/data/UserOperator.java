@@ -215,6 +215,9 @@ public class UserOperator {
                 if ( snapshot.child("profileImageUrl").getValue() != null) {
                     userEntity.setProfileImageUrl(snapshot.child("profileImageUrl").getValue().toString());
                 }
+                if ( snapshot.child("searchingDistance").getValue(int.class) != null) {
+                    userEntity.setSearchDistance(snapshot.child("searchingDistance").getValue(int.class));
+                }
                 callback.UserData(userEntity);
             }
 
