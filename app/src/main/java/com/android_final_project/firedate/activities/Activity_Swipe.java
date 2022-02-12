@@ -460,9 +460,14 @@ public class Activity_Swipe extends AppCompatActivity {
                     HashMap<String,Object> locMap = new Gson().fromJson(locationJSON, HashMap.class);
 
                     Location location = new Location(LocationServices.getFusedLocationProviderClient(Activity_Swipe.this).toString());
-
-                    location.setLongitude((Double)locMap.get("longitude"));
-                    location.setLatitude((Double)locMap.get("latitude"));
+                    try {
+                        location.setLongitude((Double) locMap.get("longitude"));
+                        location.setLatitude((Double) locMap.get("latitude"));
+                    }
+                    catch(java.lang.NullPointerException e){
+                        location.setLongitude(0);
+                        location.setLatitude(0);
+                    }
 
                     return new UserEntity(userID, name, description, profileImageUrl, usersAgeInMillis, location, searchDistance);
                 }
