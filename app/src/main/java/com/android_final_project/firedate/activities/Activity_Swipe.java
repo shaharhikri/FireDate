@@ -1,5 +1,6 @@
 package com.android_final_project.firedate.activities;
 
+import android.animation.Animator;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,10 +8,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +42,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -95,6 +103,47 @@ public class Activity_Swipe extends AppCompatActivity {
         }
     };
 
+    private LinearLayout swipe_layout_match;
+    private ImageView swipe_IMG_match;
+    private TextView swipe_tv_match;
+    private final static long ANIM_DURATION = 3000l;
+    private Button swipe_btn_match;
+
+    Runnable onBackPressed_swiping = () -> {
+        Log.d("ptttc", "onBackPressed_swiping");
+        super.onBackPressed();
+        finish();
+        System.exit(0);
+    };
+    Runnable onBackPressed_run = onBackPressed_swiping;
+    Runnable onBackPressed_match = () -> {
+        Log.d("ptttc", "onBackPressed_match");
+        swipe_btn_match.setVisibility(View.INVISIBLE);
+        swipe_btn_match.setOnClickListener( view2 -> { });
+        swipe_layout_match.setVisibility(View.GONE);
+        onBackPressed_run = onBackPressed_swiping;
+    };
+
+    private final Handler waitForImageHandler = new Handler();
+    private final Runnable waitForImageHandler_run = new Runnable() {
+        @Override
+        public void run() {
+            if(userEntity == null || userEntity.getProfileImageUrl() == null) {
+                UserOperator.getUserData(currentUserId, currentUserSexualGroup, userData -> {
+                    userEntity = userData;
+                });
+                waitForImageHandler.postDelayed(waitForImageHandler_run, 50);
+            }
+            else{
+                bundle.putString(getString(R.string.key_currentUserId), currentUserId);
+                bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
+                bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
+                bundle.putInt(getString(R.string.key_currentUserSearchingDistance), userSearchingDistance);
+                endOnCreate();
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +177,7 @@ public class Activity_Swipe extends AppCompatActivity {
         Log.d("pttt", "endOnCreate: Searching dis: " + userSearchingDistance);
 
         startGpsSampling();
+        swipe_LL_loading.setBackgroundColor(Color.parseColor("#00FFFFFF"));
         loadingAnimationEnd();
     }
 
@@ -146,9 +196,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-        System.exit(0);
+        onBackPressed_run.run();
     }
 
     @Override
@@ -192,16 +240,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
     private void loadingAnimationStart() {
         swipe_LL_loading.setVisibility(View.VISIBLE);
-    }
-
-    private void loadingAnimationStart(boolean background) {
-        if (background){
-            swipe_LL_loading.setBackgroundColor(Color.parseColor("#AAFFFFFF"));
-        } else {
-            swipe_LL_loading.setBackgroundColor(Color.parseColor("#00FFFFFF"));
-        }
-
-        loadingAnimationStart();
+        Log.d("ptttb", "loadingAnimationStart: ");
     }
 
     private void loadingAnimationEnd() {
@@ -209,22 +248,25 @@ public class Activity_Swipe extends AppCompatActivity {
     }
 
     private void initValues() {
-        loadingAnimationStart();
         bundle = getIntent().getBundleExtra(getString(R.string.key_bundle));
         if (bundle == null) {
+            Log.d("pttt", "initValues: ");
+            loadingAnimationStart();
             bundle = new Bundle();
             UserOperator.getUserGroup(currentUserId, sexualPreferenceGroups -> {
                 currentUserSexualGroup = sexualPreferenceGroups;
                 initFlingContainer(sexualPreferenceGroups.getPreferenceGroups());
 
-                UserOperator.getUserData(currentUserId, currentUserSexualGroup, userData -> {
-                    userEntity = userData;
-                    bundle.putString(getString(R.string.key_currentUserId), currentUserId);
-                    bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
-                    bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
-                    bundle.putInt(getString(R.string.key_currentUserSearchingDistance), userSearchingDistance);
-                    endOnCreate();
-                });
+                waitForImageHandler_run.run();
+
+//                UserOperator.getUserData(currentUserId, currentUserSexualGroup, userData -> {
+//                    userEntity = userData;
+//                    bundle.putString(getString(R.string.key_currentUserId), currentUserId);
+//                    bundle.putString(getString(R.string.key_currentUserSexualGroup), currentUserSexualGroup.toString());
+//                    bundle.putString(getString(R.string.key_currentUserData), new Gson().toJson(userEntity));
+//                    bundle.putInt(getString(R.string.key_currentUserSearchingDistance), userSearchingDistance);
+//                    endOnCreate();
+//                });
             });
         } else {
             String currentUserSexualGroupStr = bundle.getString(getString(R.string.key_currentUserSexualGroup));
@@ -257,6 +299,10 @@ public class Activity_Swipe extends AppCompatActivity {
         swipe_BTN_settings = findViewById(R.id.swipe_BTN_settings);
         swipe_BTN_chats = findViewById(R.id.swipe_BTN_chats);
         swipe_LL_loading = findViewById(R.id.swipe_LL_loading);
+        swipe_layout_match = findViewById(R.id.swipe_layout_match);
+        swipe_IMG_match = findViewById(R.id.swipe_IMG_match);
+        swipe_tv_match = findViewById(R.id.swipe_tv_match);
+        swipe_btn_match = findViewById(R.id.swipe_btn_match);
     }
 
     private void initViews(){
@@ -336,14 +382,7 @@ public class Activity_Swipe extends AppCompatActivity {
 
                     @Override
                     public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                        // Ask for more data here
                         getUsers(userPreferenceGroups, cardsId);
-                        if(cardList.size() == 0){
-                            loadingAnimationStart(false);
-                        } else {
-                            loadingAnimationEnd();
-                        }
-
                     }
 
                     @Override
@@ -363,6 +402,8 @@ public class Activity_Swipe extends AppCompatActivity {
             bundle.putFloat(getString(R.string.key_distance), currentLocation.distanceTo(tmp.getLocation()) / 100_000);
             changeActivity(Activity_UserDetails.class);
 
+//                Toast.makeText(MainActivity.this, "Clicked!", Toast.LENGTH_SHORT).show();
+//                swipe_TXT_print.setText(dataObject+" Clicked!");
         });
     }
 
@@ -408,9 +449,7 @@ public class Activity_Swipe extends AppCompatActivity {
                             .child("ChatId")
                             .setValue(chatKey);
 
-
-
-                    Toast.makeText(Activity_Swipe.this, "Match!", Toast.LENGTH_SHORT).show();
+                    matchAnimation(otherUser.getName());
                 }
             }
 
@@ -533,5 +572,40 @@ public class Activity_Swipe extends AppCompatActivity {
 //        }
 
         return flag;
+    }
+
+    public void matchAnimation(String matchName){
+        onBackPressed_run = onBackPressed_match;
+        swipe_layout_match.setVisibility(View.VISIBLE);
+        swipe_tv_match.setText("You have match with "+matchName);
+
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        swipe_IMG_match.setY((float)height / 2);
+        swipe_IMG_match.setScaleY(0.0f);
+        swipe_IMG_match.setScaleX(0.0f);
+        swipe_IMG_match.animate()
+                .scaleY(1.0f).scaleX(1.0f).translationY(0)
+                .setDuration(ANIM_DURATION).setInterpolator(new AccelerateInterpolator())
+                .setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) { }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        swipe_btn_match.setVisibility(View.VISIBLE);
+                        swipe_btn_match.setOnClickListener( view -> {
+                            onBackPressed_match.run();
+                        });
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) { }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) { }
+                });
     }
 }
